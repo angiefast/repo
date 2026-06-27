@@ -792,13 +792,12 @@ body::before {
 
 .instrument-photo {
   width: 100%;
-  max-height: 280px;
-  object-fit: cover;
-  object-position: center top;
+  max-height: 320px;
+  object-fit: contain;
   display: block;
   border-radius: 6px;
   border: 1px solid rgba(196,154,60,0.35);
-  /* Sepia tone to match the parchment/ancient-Asia theme */
+  background: rgba(226,212,180,0.35); /* parchment fill behind the image */
   filter: sepia(0.42) contrast(1.06) brightness(0.93) saturate(0.85);
   box-shadow: 0 2px 12px rgba(26,13,7,0.12);
 }

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About · Echoes of Asia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css"/>
+  <style>
+    .about-page { max-width: 720px; margin: 0 auto; padding: 60px 40px 80px; }
+
+    .about-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 40px;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .about-hero {
+      text-align: center;
+      margin-bottom: 52px;
+      position: relative;
+    }
+
+    .about-avatar {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      border: 2px solid var(--gold);
+      margin: 0 auto 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--parchment-dark);
+      overflow: hidden;
+    }
+
+    /* Ink-brush monogram inside the avatar circle */
+    .about-avatar svg { width: 56px; height: 56px; color: var(--ink-mid); }
+
+    .about-name {
+      font-family: var(--font-display);
+      font-size: 36px;
+      font-weight: 500;
+      color: var(--ink);
+      letter-spacing: 0.02em;
+      margin-bottom: 6px;
+    }
+
+    .about-role {
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold-dark);
+      margin-bottom: 20px;
+    }
+
+    .about-divider {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      justify-content: center;
+      margin: 0 auto 48px;
+    }
+    .about-divider .line { flex: 1; max-width: 80px; height: 1px; background: var(--gold); opacity: 0.4; }
+    .about-divider .diamond {
+      width: 7px; height: 7px;
+      background: var(--gold);
+      transform: rotate(45deg);
+      opacity: 0.7;
+    }
+
+    .about-body {
+      background: var(--parchment-dark);
+      border-left: 3px solid var(--gold);
+      padding: 32px 36px;
+      border-radius: 0 4px 4px 0;
+      position: relative;
+    }
+
+    .about-body::before {
+      content: '\201C';
+      font-family: var(--font-display);
+      font-size: 80px;
+      color: var(--gold);
+      opacity: 0.2;
+      position: absolute;
+      top: -10px;
+      left: 18px;
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .about-body p {
+      font-family: var(--font-body);
+      font-size: 15.5px;
+      line-height: 1.85;
+      color: var(--ink-mid);
+      position: relative;
+      z-index: 1;
+    }
+
+    .about-footer-note {
+      text-align: center;
+      margin-top: 44px;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      color: var(--ink-light);
+      opacity: 0.8;
+    }
+
+    @media (max-width: 680px) {
+      .about-page { padding: 40px 20px 60px; }
+      .about-nav  { padding: 18px 20px; }
+      .about-body { padding: 24px 22px; }
+      .about-name { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+<div class="page-content">
+
+  <!-- NAV -->
+  <nav class="about-nav">
+    <a href="index.html" class="back-btn">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      All Instruments
+    </a>
+    <span class="detail-period-tag">About the Creator</span>
+  </nav>
+
+  <div class="about-page">
+
+    <!-- HERO -->
+    <div class="about-hero">
+      <div class="about-avatar">
+        <!-- Brush-stroke "A" monogram -->
+        <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 46 L28 10 L46 46" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M16 34 L40 34" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+        </svg>
+      </div>
+      <h1 class="about-name">Angie Lee</h1>
+      <p class="about-role">Creator &nbsp;·&nbsp; Echoes of Asia</p>
+
+      <div class="about-divider">
+        <div class="line"></div>
+        <div class="diamond"></div>
+        <div class="line"></div>
+      </div>
+    </div>
+
+    <!-- BIO -->
+    <div class="about-body">
+      <p>
+        Hello! My name is Angie Lee and I am a high school student. I built this website in hopes of helping people understand more about Asian instruments. As someone who lives in America, I was limited to only seeing western instruments like the violin or piano in my daily life. However, this made me unaware of my history and the fact that my Asian heritage had our own unique instruments.
+      </p>
+      <br>
+      <p>
+        From this website, I hope to help many users understand that our culture has its own instruments that don't have nearly enough recognition compared to instruments like the piano that many Asian American children play today. I created this interactive website to allow users to find out the history of these instruments as well as get the chance to play them — in the comfort of your home!
+      </p>
+    </div>
+
+    <p class="about-footer-note">Built with care &nbsp;·&nbsp; Echoes of Asia &nbsp;·&nbsp; 2025</p>
+
+  </div>
+
+  <footer class="site-footer">
+    Echoes of Asia &nbsp;·&nbsp; An Interactive Musical Heritage Project &nbsp;·&nbsp;
+    <a href="about.html" style="color:var(--gold-pale);text-decoration:none;">About the Creator</a>
+  </footer>
+
+</div>
+</body>
+</html>
