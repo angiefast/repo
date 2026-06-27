@@ -160,7 +160,7 @@ function startWind(freq) {
   const ctx = getAudio();
   windGain = ctx.createGain();
   windGain.gain.setValueAtTime(0, ctx.currentTime);
-  windGain.gain.linearRampToValueAtTime(0.38, ctx.currentTime + 0.06); // fade in to avoid pop
+  windGain.gain.linearRampToValueAtTime(0.08, ctx.currentTime + 0.06); // start quiet; poll loop drives actual level
   windGain.connect(ctx.destination);
 
   windOsc = ctx.createOscillator();
@@ -394,6 +394,8 @@ function initWind(inst, container) {
     }
   }
 
+  const MAX_VOL = 28; // roughly a loud blow
+
   function pollMic() {
     const buf = new Uint8Array(analyser.frequencyBinCount);
     function tick() {
@@ -401,8 +403,25 @@ function initWind(inst, container) {
       let sum = 0;
       for (const v of buf) sum += Math.abs(v - 128);
       const vol = sum / buf.length;
-      breathFill.style.width = Math.min(100, (vol / THRESHOLD) * 100) + '%';
-      setBlowing(vol > THRESHOLD);
+
+      // Breath meter scales to MAX_VOL
+      breathFill.style.width = Math.min(100, (vol / MAX_VOL) * 100) + '%';
+
+      if (vol > THRESHOLD) {
+        // Map blow intensity → gain: gentle breath = 0.08, hard blow = 0.7
+        const t = Math.min(1, (vol - THRESHOLD) / (MAX_VOL - THRESHOLD));
+        const targetGain = 0.08 + t * 0.62;
+
+        setBlowing(true);
+
+        // Continuously update gain so volume tracks breath pressure
+        if (windGain) {
+          windGain.gain.setTargetAtTime(targetGain, getAudio().currentTime, 0.04);
+        }
+      } else {
+        setBlowing(false);
+      }
+
       rafId = requestAnimationFrame(tick);
     }
     tick();
