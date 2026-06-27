@@ -12,20 +12,31 @@ function getAudio() {
 
 /* ── PLUCK (string instruments) ── */
 function playPluck(freq) {
-  const ctx = getAudio();
-  const osc  = ctx.createOscillator();
-  const gain = ctx.createGain();
-  const now  = ctx.currentTime;
+  const ctx    = getAudio();
+  const now    = ctx.currentTime;
+  const master = ctx.createGain();
+  master.gain.value = 0.5;
+  master.connect(ctx.destination);
 
-  osc.type = 'triangle';
-  osc.frequency.value = freq;
-  osc.connect(gain);
-  gain.connect(ctx.destination);
-
-  gain.gain.setValueAtTime(0.55, now);
-  gain.gain.exponentialRampToValueAtTime(0.001, now + 2.8);
-  osc.start(now);
-  osc.stop(now + 2.8);
+  // Phone speakers can't reproduce frequencies below ~200 Hz, so we layer
+  // the 2nd and 3rd harmonics alongside the fundamental. Those overtones sit
+  // well within phone-speaker range and make the note clearly audible.
+  [
+    { ratio: 1, type: 'triangle', vol: 0.70, decay: 2.8 },
+    { ratio: 2, type: 'sine',     vol: 0.40, decay: 1.8 },
+    { ratio: 3, type: 'sine',     vol: 0.20, decay: 1.1 },
+  ].forEach(({ ratio, type, vol, decay }) => {
+    const osc = ctx.createOscillator();
+    const g   = ctx.createGain();
+    osc.type  = type;
+    osc.frequency.value = freq * ratio;
+    g.gain.setValueAtTime(vol, now);
+    g.gain.exponentialRampToValueAtTime(0.001, now + decay);
+    osc.connect(g);
+    g.connect(master);
+    osc.start(now);
+    osc.stop(now + decay + 0.05);
+  });
 }
 
 /* ── BELL / METALLOPHONE (gamelan) ── */
