@@ -50,19 +50,10 @@
           <defs><path id="logo-text-arc" d="M 22,120 A 98,98 0 0 1 218,120"/></defs>
           <!-- Parchment background -->
           <circle cx="120" cy="120" r="115" fill="#E8D4A8"/>
-          <!-- Ink brush outer ring — intentionally organic, not a perfect circle -->
-          <path d="M 120,15 C 157,13 196,30 215,60 C 235,90 236,128 223,158 C 210,188 189,208 162,219 C 135,230 103,228 77,215 C 51,202 31,179 21,150 C 11,121 14,87 29,61 C 44,35 70,17 100,15 Z" stroke="#2A1A0E" stroke-width="12" stroke-opacity="0.78" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-          <!-- Secondary inner ring for layered brush feel -->
-          <path d="M 120,22 C 154,20 190,37 208,64 C 227,91 227,129 214,157 C 201,185 181,205 155,216 C 129,227 100,225 76,213 C 52,201 34,180 25,152 C 16,124 19,91 34,65 C 49,39 74,23 102,22 Z" stroke="#2A1A0E" stroke-width="2" stroke-opacity="0.18" fill="none"/>
-          <!-- Ink splatter dots (simulate brush flicks) -->
-          <g fill="#2A1A0E">
-            <circle cx="94"  cy="18"  r="2.5" opacity="0.40"/>
-            <circle cx="87"  cy="24"  r="1.5" opacity="0.26"/>
-            <circle cx="221" cy="96"  r="2"   opacity="0.36"/>
-            <circle cx="226" cy="88"  r="1.5" opacity="0.24"/>
-            <circle cx="24"  cy="149" r="2"   opacity="0.32"/>
-          </g>
-          <!-- 8 gold diamond marks -->
+          <!-- Outer border rings -->
+          <circle cx="120" cy="120" r="113" stroke="#C49A3C" stroke-width="2.5"/>
+          <circle cx="120" cy="120" r="107" stroke="#C49A3C" stroke-width="0.7" stroke-opacity="0.5"/>
+          <!-- 8 outer diamond marks -->
           <g fill="#C49A3C">
             <rect transform="translate(120,9) rotate(45)"       x="-3.5" y="-3.5" width="7" height="7"/>
             <rect transform="translate(198.5,41.5) rotate(45)"  x="-3.5" y="-3.5" width="7" height="7"/>
@@ -77,25 +68,26 @@
           <text font-family="Nunito,sans-serif" font-size="10.5" fill="#8B6914" fill-opacity="0.78" letter-spacing="2.8">
             <textPath href="#logo-text-arc" startOffset="50%" text-anchor="middle">ECHOES · OF · ASIA</textPath>
           </text>
-          <!-- Shakuhachi bamboo flute — diagonal woodblock silhouette -->
-          <g transform="rotate(-22, 120, 120)">
-            <!-- Bamboo tube -->
-            <rect x="111" y="57" width="18" height="126" rx="9" fill="#2A1A0E" fill-opacity="0.80"/>
-            <!-- Bamboo node rings (joints) -->
-            <rect x="109" y="100" width="22" height="5" rx="2.5" fill="#1A0D07"/>
-            <rect x="109" y="140" width="22" height="5" rx="2.5" fill="#1A0D07"/>
-            <!-- Blowing end opening -->
-            <ellipse cx="120" cy="61" rx="8" ry="5" fill="#E8D4A8"/>
-            <!-- 5 finger holes -->
-            <circle cx="120" cy="83"  r="3.5" fill="#E8D4A8"/>
-            <circle cx="120" cy="116" r="3.5" fill="#E8D4A8"/>
-            <circle cx="120" cy="128" r="3.5" fill="#E8D4A8"/>
-            <circle cx="120" cy="150" r="3.5" fill="#E8D4A8"/>
-            <circle cx="120" cy="163" r="3.5" fill="#E8D4A8"/>
-            <!-- Bamboo leaves near top -->
-            <path d="M 118,72 C 106,60 92,56 87,63 C 93,70 107,72 118,76 Z" fill="#4A6741" fill-opacity="0.50"/>
-            <path d="M 122,68 C 134,56 148,54 152,62 C 146,68 132,69 122,73 Z" fill="#4A6741" fill-opacity="0.42"/>
+          <!-- Inner geometric band -->
+          <circle cx="120" cy="120" r="86" stroke="#C49A3C" stroke-width="1.4" stroke-opacity="0.60"/>
+          <circle cx="120" cy="120" r="80" stroke="#C49A3C" stroke-width="0.7" stroke-opacity="0.35"/>
+          <!-- 8 inner diamonds at r=83, offset 22.5° from outer set -->
+          <g fill="#C49A3C" fill-opacity="0.70">
+            <rect transform="translate(196.7,152.1) rotate(45)" x="-2.5" y="-2.5" width="5" height="5"/>
+            <rect transform="translate(152.1,196.7) rotate(45)" x="-2.5" y="-2.5" width="5" height="5"/>
+            <rect transform="translate(87.9,196.7) rotate(45)"  x="-2.5" y="-2.5" width="5" height="5"/>
+            <rect transform="translate(43.3,152.1) rotate(45)"  x="-2.5" y="-2.5" width="5" height="5"/>
+            <rect transform="translate(43.3,87.9) rotate(45)"   x="-2.5" y="-2.5" width="5" height="5"/>
+            <rect transform="translate(87.9,43.3) rotate(45)"   x="-2.5" y="-2.5" width="5" height="5"/>
+            <rect transform="translate(152.1,43.3) rotate(45)"  x="-2.5" y="-2.5" width="5" height="5"/>
+            <rect transform="translate(196.7,87.9) rotate(45)"  x="-2.5" y="-2.5" width="5" height="5"/>
           </g>
+          <!-- 8-pointed geometric star (khatam / octagram) -->
+          <polygon points="120,62 132.3,90.5 161,79 149.5,107.7 178,120 149.5,132.3 161,161 132.3,149.5 120,178 107.7,149.5 79,161 90.5,132.3 62,120 90.5,107.7 79,79 107.7,90.5" fill="#C49A3C" fill-opacity="0.80" stroke="#8B6914" stroke-width="0.8" stroke-opacity="0.45"/>
+          <!-- Center medallion -->
+          <circle cx="120" cy="120" r="20" fill="#E8D4A8" stroke="#C49A3C" stroke-width="1.4"/>
+          <circle cx="120" cy="120" r="9"  fill="#C49A3C" fill-opacity="0.85"/>
+          <circle cx="120" cy="120" r="3.5" fill="#E8D4A8"/>
         </svg>
       </div>
       <p class="site-eyebrow">An Interactive Journey Through Time</p>
