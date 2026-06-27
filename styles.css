@@ -892,10 +892,46 @@ body::before {
   from { opacity: 0; transform: translateY(22px); }
   to   { opacity: 1; transform: none; }
 }
-.site-eyebrow   { animation: hero-fade-up 0.7s 0.15s both ease; }
-.site-title     { animation: hero-fade-up 0.8s 0.30s both ease; }
-.site-subtitle  { animation: hero-fade-up 0.7s 0.50s both ease; }
-.header-ornament{ animation: hero-fade-up 0.6s 0.68s both ease; }
+/* Logo animates in first, then text follows */
+.site-logo-wrap  { animation: hero-fade-up 0.75s 0s    both ease; }
+.site-eyebrow    { animation: hero-fade-up 0.7s  0.28s both ease; }
+.site-title      { animation: hero-fade-up 0.8s  0.44s both ease; }
+.site-subtitle   { animation: hero-fade-up 0.7s  0.62s both ease; }
+.header-ornament { animation: hero-fade-up 0.6s  0.80s both ease; }
+
+/* ── LOGO MARK ── */
+.site-logo-wrap {
+  margin-bottom: 22px;
+  display: flex;
+  justify-content: center;
+}
+.site-logo-mark {
+  width: 110px;
+  height: 110px;
+  display: block;
+  filter: drop-shadow(0 3px 14px rgba(196,154,60,0.28));
+}
+
+/* About-page logo (larger, standalone) */
+.about-logo-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+.about-logo-mark {
+  width: 132px;
+  height: 132px;
+  filter: drop-shadow(0 4px 18px rgba(196,154,60,0.22));
+}
+.about-logo-sub {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold-dark);
+  opacity: 0.75;
+}
 
 /* ══════════════════════════════════════════
    SCROLL FADE-UP ANIMATIONS
