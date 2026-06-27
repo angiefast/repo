@@ -499,9 +499,13 @@ body::before {
 
 #play-view {
   display: none;
-  min-height: 100vh;
+  position: fixed;
+  inset: 0;
   flex-direction: column;
   background: #110900;
+  z-index: 200;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 #play-view.active { display: flex; }
@@ -509,9 +513,30 @@ body::before {
 .play-topbar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 16px 24px;
+  gap: 12px;
+  padding: 14px 20px;
   border-bottom: 1px solid rgba(255,255,255,0.08);
+  flex-shrink: 0;
+}
+
+.play-home-btn {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(240,230,208,0.45);
+  text-decoration: none;
+  padding: 5px 10px;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 3px;
+  white-space: nowrap;
+  transition: color 0.18s, border-color 0.18s;
+  flex-shrink: 0;
+}
+
+.play-home-btn:hover {
+  color: var(--gold-pale);
+  border-color: rgba(196,154,60,0.5);
 }
 
 .play-instrument-name {

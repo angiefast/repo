@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Help · Echoes of Asia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css"/>
+  <style>
+    .help-page {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 52px 40px 80px;
+    }
+
+    .help-heading {
+      font-family: var(--font-display);
+      font-size: 42px;
+      font-weight: 400;
+      color: var(--ink);
+      letter-spacing: 0.02em;
+      margin-bottom: 6px;
+    }
+
+    .help-subheading {
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold-dark);
+      margin-bottom: 44px;
+    }
+
+    .faq-section-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold-dark);
+      margin: 44px 0 18px;
+      padding-left: 16px;
+      border-left: 3px solid var(--gold);
+    }
+
+    .faq-item {
+      background: var(--parchment-dark);
+      border: 1px solid rgba(196,154,60,0.2);
+      border-radius: 4px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    .faq-q {
+      width: 100%;
+      background: none;
+      border: none;
+      text-align: left;
+      padding: 18px 20px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      transition: background 0.15s;
+    }
+
+    .faq-q:hover { background: rgba(196,154,60,0.06); }
+
+    .faq-q .arrow {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      color: var(--gold-dark);
+      transition: transform 0.22s;
+    }
+
+    .faq-item.open .faq-q .arrow { transform: rotate(90deg); }
+
+    .faq-a {
+      display: none;
+      padding: 0 20px 20px;
+      font-size: 14px;
+      line-height: 1.75;
+      color: var(--ink-mid);
+      border-top: 1px solid rgba(196,154,60,0.15);
+    }
+
+    .faq-item.open .faq-a { display: block; }
+
+    .faq-a p { margin-top: 14px; }
+    .faq-a p:first-child { margin-top: 14px; }
+
+    .faq-a ul {
+      margin: 10px 0 0 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .faq-a .tip-box {
+      margin-top: 14px;
+      background: rgba(196,154,60,0.1);
+      border-left: 3px solid var(--gold);
+      padding: 12px 16px;
+      border-radius: 0 4px 4px 0;
+      font-size: 13px;
+      color: var(--ink-mid);
+    }
+
+    .faq-a .tip-box strong { color: var(--ink); }
+
+    @media (max-width: 680px) {
+      .help-page { padding: 36px 20px 60px; }
+      .help-heading { font-size: 32px; }
+    }
+  </style>
+</head>
+<body>
+<div class="page-content">
+
+  <!-- TOP NAV -->
+  <nav class="top-nav">
+    <a href="index.html" class="top-nav-brand">Echoes of Asia</a>
+    <a href="index.html" class="top-nav-tab">Instruments</a>
+    <a href="about.html" class="top-nav-tab">About</a>
+    <a href="help.html"  class="top-nav-tab active">Help</a>
+  </nav>
+
+  <div class="help-page">
+
+    <h1 class="help-heading">Help</h1>
+    <p class="help-subheading">Common questions &amp; troubleshooting</p>
+
+    <!-- ── AUDIO ── -->
+    <div class="faq-section-label">Audio &amp; Sound</div>
+
+    <div class="faq-item open">
+      <button class="faq-q">
+        I can't hear any sound on my phone — why?
+        <svg class="arrow" viewBox="0 0 18 18" fill="none"><path d="M6 4l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="faq-a">
+        <p>The most common cause is <strong>silent mode</strong>.</p>
+        <ul>
+          <li><strong>iPhone:</strong> Find the small physical switch on the upper-left side of your phone. Flip it so no orange is showing — that means your phone is in Ring mode.</li>
+          <li><strong>Android:</strong> Press the volume-up button on the side of your phone. Make sure the <em>media</em> volume (not just ringtone) is turned up.</li>
+        </ul>
+        <p>If you're already off silent mode, also try connecting headphones — they bypass the phone's built-in speaker and often produce much clearer sound.</p>
+      </div>
+    </div>
+
+    <!-- ── MIC ── -->
+    <div class="faq-section-label">Wind Instruments &amp; Microphone</div>
+
+    <div class="faq-item">
+      <button class="faq-q">
+        The microphone isn't detecting my breath — what can I do?
+        <svg class="arrow" viewBox="0 0 18 18" fill="none"><path d="M6 4l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="faq-a">
+        <p>Microphone sensitivity varies a lot between phones and devices. If your mic isn't responding, try these tips:</p>
+        <ul>
+          <li>Hold the phone closer to your mouth — the mic is usually at the bottom edge.</li>
+          <li>Blow a little more firmly into the microphone opening.</li>
+          <li>Make sure you've granted microphone permission when the browser asked.</li>
+        </ul>
+        <div class="tip-box">
+          <strong>Still not working?</strong> Use the <em>Hold to Blow</em> button! Press and hold it to produce the wind sound, then — while still holding — tap the numbered hole buttons to change the pitch. You can press any combination of holes at the same time, just like a real wind instrument. Let go of the button to stop the sound.
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q">
+        How do hole combinations change the note on wind instruments?
+        <svg class="arrow" viewBox="0 0 18 18" fill="none"><path d="M6 4l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="faq-a">
+        <p>Each numbered hole corresponds to a specific pitch. The note you hear is determined by <strong>which</strong> holes you press, not just how many:</p>
+        <ul>
+          <li>Lower-numbered holes (① ②) produce lower notes.</li>
+          <li>Higher-numbered holes (④ ⑤) produce higher notes.</li>
+          <li>Pressing multiple holes at once gives a pitch in between — the exact blend depends on which holes you combine.</li>
+        </ul>
+        <p>Experiment! Try holding ① + ③ vs ② + ④ — they'll sound different even though you're pressing the same number of holes.</p>
+      </div>
+    </div>
+
+    <!-- ── PLAYING ── -->
+    <div class="faq-section-label">Playing the Instruments</div>
+
+    <div class="faq-item">
+      <button class="faq-q">
+        How do I play the string instruments?
+        <svg class="arrow" viewBox="0 0 18 18" fill="none"><path d="M6 4l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="faq-a">
+        <p><strong>Mobile:</strong> Swipe or drag your finger up and down across the strings. Each string is a different note. You can also tap a single string to pluck it.</p>
+        <p><strong>Desktop / keyboard:</strong> Use number keys 1, 2, 3… to pluck individual strings. You can also click and drag with your mouse.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q">
+        How do I play the percussion instruments?
+        <svg class="arrow" viewBox="0 0 18 18" fill="none"><path d="M6 4l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="faq-a">
+        <p><strong>Mobile:</strong> Tap each drum pad or metallophone bar. Each surface produces a different sound.</p>
+        <p><strong>Desktop / keyboard:</strong> Press number keys 1, 2, 3… to hit each pad or bar in order. Try building a repeating rhythm!</p>
+        <ul>
+          <li><strong>Tabla:</strong> Key 1 = Dayan (high) · Key 2 = Bayan (deep bass)</li>
+          <li><strong>Janggu:</strong> Key 1 = 채편 bright crack · Key 2 = 궁편 deep boom</li>
+          <li><strong>Gamelan:</strong> Keys 1–5 hit bars from lowest to highest pitch</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q">
+        I'm on a computer — can I use my keyboard?
+        <svg class="arrow" viewBox="0 0 18 18" fill="none"><path d="M6 4l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="faq-a">
+        <p>Yes! Keyboard shortcuts work on all three instrument types:</p>
+        <ul>
+          <li><strong>Wind:</strong> Number keys 1–5 press/release individual holes. Space bar activates the blow (hold it down, press holes to change pitch).</li>
+          <li><strong>Strings:</strong> Number keys 1–8 pluck individual strings.</li>
+          <li><strong>Percussion:</strong> Number keys 1–5 hit each pad or bar.</li>
+        </ul>
+        <p>A shortcut reminder is shown at the bottom of every play screen.</p>
+      </div>
+    </div>
+
+  </div><!-- /help-page -->
+
+  <footer class="site-footer">
+    Echoes of Asia &nbsp;·&nbsp; An Interactive Musical Heritage Project
+  </footer>
+
+</div>
+
+<script>
+  // Accordion toggle
+  document.querySelectorAll('.faq-q').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item');
+      item.classList.toggle('open');
+    });
+  });
+</script>
+</body>
+</html>
