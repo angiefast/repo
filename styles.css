@@ -59,6 +59,52 @@ body::before {
   pointer-events: none;
 }
 
+/* ── TOP NAV TABS ── */
+.top-nav {
+  background: var(--ink);
+  display: flex;
+  align-items: stretch;
+  padding: 0 32px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid rgba(196,154,60,0.2);
+}
+
+.top-nav-brand {
+  font-family: var(--font-display);
+  font-size: 15px;
+  color: var(--gold-pale);
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  padding: 12px 0;
+  margin-right: auto;
+  opacity: 0.9;
+  align-self: center;
+}
+
+.top-nav-tab {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(240,230,208,0.55);
+  text-decoration: none;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid transparent;
+  transition: color 0.18s, border-color 0.18s;
+}
+
+.top-nav-tab:hover { color: var(--gold-pale); }
+
+.top-nav-tab.active {
+  color: var(--gold-pale);
+  border-bottom-color: var(--gold);
+}
+
 .header-content { position: relative; z-index: 1; }
 
 .site-eyebrow {
