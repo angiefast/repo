@@ -884,3 +884,261 @@ body::before {
   .info-section { padding: 36px 20px; }
   .period-section { padding: 52px 20px; }
 }
+
+/* ══════════════════════════════════════════
+   HERO ENTRANCE ANIMATIONS
+══════════════════════════════════════════ */
+@keyframes hero-fade-up {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: none; }
+}
+.site-eyebrow   { animation: hero-fade-up 0.7s 0.15s both ease; }
+.site-title     { animation: hero-fade-up 0.8s 0.30s both ease; }
+.site-subtitle  { animation: hero-fade-up 0.7s 0.50s both ease; }
+.header-ornament{ animation: hero-fade-up 0.6s 0.68s both ease; }
+
+/* ══════════════════════════════════════════
+   SCROLL FADE-UP ANIMATIONS
+══════════════════════════════════════════ */
+.fade-up {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.fade-up.visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ══════════════════════════════════════════
+   ORIGINS / ASIA MAP SECTION
+══════════════════════════════════════════ */
+.origins-section {
+  padding: 80px 40px 60px;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.origins-header {
+  text-align: center;
+  margin-bottom: 52px;
+}
+
+.origins-title {
+  font-family: var(--font-display);
+  font-size: 34px;
+  font-weight: 500;
+  color: var(--ink);
+  letter-spacing: 0.02em;
+  margin-bottom: 8px;
+}
+
+.origins-sub {
+  font-size: 13px;
+  color: var(--ink-light);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.map-and-panel {
+  display: flex;
+  gap: 36px;
+  align-items: flex-start;
+}
+
+/* SVG map */
+.asia-map {
+  flex: 1;
+  min-width: 0;
+  border-radius: 8px;
+  border: 1px solid rgba(196,154,60,0.2);
+  background: rgba(232,220,190,0.35);
+  cursor: default;
+}
+
+/* region blobs */
+.map-blob {
+  fill: var(--gold);
+  fill-opacity: 0.12;
+  stroke: var(--gold);
+  stroke-opacity: 0.4;
+  stroke-width: 1.5;
+  cursor: pointer;
+  transition: fill-opacity 0.25s, stroke-opacity 0.25s, filter 0.25s;
+}
+.map-blob-sub {
+  stroke-width: 1;
+}
+.map-blob:hover,
+.map-blob.active {
+  fill-opacity: 0.30;
+  stroke-opacity: 0.85;
+  filter: drop-shadow(0 0 8px rgba(196,154,60,0.55));
+}
+.map-blob.active { fill-opacity: 0.28; }
+
+/* instrument dots */
+.inst-dot {
+  fill: var(--gold-dark);
+  opacity: 0.65;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.inst-dot:hover { opacity: 1; }
+.inst-dot.pulsing {
+  animation: dot-pulse 1.6s ease-in-out infinite;
+}
+@keyframes dot-pulse {
+  0%, 100% { r: 7; opacity: 0.85; }
+  50%       { r: 9.5; opacity: 1; }
+}
+
+/* map text */
+.map-region-label {
+  font-family: var(--font-body);
+  font-size: 9px;
+  font-weight: 700;
+  fill: var(--ink-mid);
+  fill-opacity: 0.45;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* floating tooltip */
+.map-tooltip {
+  position: fixed;
+  background: var(--ink);
+  color: var(--parchment);
+  font-family: var(--font-display);
+  font-size: 14px;
+  padding: 5px 11px 6px;
+  border-radius: 4px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  z-index: 300;
+  white-space: nowrap;
+  border: 1px solid rgba(196,154,60,0.3);
+}
+.map-tooltip.show { opacity: 1; }
+
+/* right panel */
+.map-panel {
+  width: 240px;
+  flex-shrink: 0;
+  min-height: 300px;
+}
+
+.map-panel-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--ink);
+  padding-bottom: 12px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid rgba(196,154,60,0.35);
+}
+
+.map-inst-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 0;
+  text-decoration: none;
+  color: inherit;
+  border-bottom: 1px solid rgba(26,13,7,0.06);
+  transition: color 0.15s, transform 0.15s;
+}
+.map-inst-link:hover {
+  color: var(--gold-dark);
+  transform: translateX(3px);
+}
+
+.map-inst-icon {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  color: var(--ink-mid);
+  opacity: 0.65;
+}
+
+.map-inst-name {
+  font-family: var(--font-display);
+  font-size: 16px;
+  color: var(--ink);
+}
+
+.map-inst-sub {
+  font-size: 11px;
+  color: var(--ink-light);
+  letter-spacing: 0.04em;
+  margin-top: 1px;
+}
+
+.map-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  min-height: 260px;
+  text-align: center;
+  color: var(--ink-light);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  opacity: 0.7;
+}
+
+@media (max-width: 800px) {
+  .map-and-panel { flex-direction: column; }
+  .map-panel { width: 100%; min-height: unset; }
+  .origins-section { padding: 60px 20px; }
+}
+
+/* ══════════════════════════════════════════
+   AUDIO VISUALIZER CANVAS
+══════════════════════════════════════════ */
+.viz-canvas {
+  display: block;
+  width: 100%;
+  height: 52px;
+  opacity: 0.75;
+  margin-top: 14px;
+  border-radius: 4px;
+}
+
+/* ══════════════════════════════════════════
+   RIPPLE EFFECT (percussion / string)
+══════════════════════════════════════════ */
+@keyframes ripple-out {
+  0%   { transform: translate(-50%, -50%) scale(0.6); opacity: 0.85; }
+  100% { transform: translate(-50%, -50%) scale(2.2); opacity: 0; }
+}
+.ripple-ring {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 100%; height: 100%;
+  border-radius: inherit;
+  border: 2px solid var(--gold);
+  animation: ripple-out 0.55s ease-out forwards;
+  pointer-events: none;
+}
+
+/* ensure ripple anchor works */
+.gbar       { position: relative; overflow: visible; }
+.tabla-drum { position: relative; overflow: visible; }
+.janggu-head{ position: relative; overflow: visible; }
+
+/* ══════════════════════════════════════════
+   WIND NOTE PULSE
+══════════════════════════════════════════ */
+@keyframes note-pop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.14); }
+  100% { transform: scale(1); }
+}
+.note-display.popping {
+  animation: note-pop 0.28s ease-out;
+}

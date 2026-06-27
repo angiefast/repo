@@ -56,8 +56,108 @@
     </div>
   </header>
 
+  <!-- ══ ORIGINS MAP ══ -->
+  <section class="origins-section fade-up" id="origins">
+    <div class="origins-header">
+      <div class="header-ornament" style="margin-bottom:18px;">
+        <div class="ornament-line"></div>
+        <div class="ornament-diamond"></div>
+        <div class="ornament-line"></div>
+      </div>
+      <h2 class="origins-title">Origins</h2>
+      <p class="origins-sub">Tap a region to explore its instruments</p>
+    </div>
+
+    <div class="map-and-panel">
+      <!-- ── ASIA MAP SVG ── -->
+      <svg class="asia-map" viewBox="0 0 680 460" xmlns="http://www.w3.org/2000/svg">
+        <!-- antique grid lines -->
+        <g stroke="#c4a96a" stroke-width="0.5" opacity="0.22">
+          <line x1="0"   y1="92"  x2="680" y2="92"/>
+          <line x1="0"   y1="184" x2="680" y2="184"/>
+          <line x1="0"   y1="276" x2="680" y2="276"/>
+          <line x1="0"   y1="368" x2="680" y2="368"/>
+          <line x1="136" y1="0"   x2="136" y2="460"/>
+          <line x1="272" y1="0"   x2="272" y2="460"/>
+          <line x1="408" y1="0"   x2="408" y2="460"/>
+          <line x1="544" y1="0"   x2="544" y2="460"/>
+        </g>
+
+        <!-- ── EAST ASIA (China / Korea) ── -->
+        <path class="map-blob" id="blob-east" data-region="east"
+          d="M 308,38 C 355,20 445,22 516,48 C 568,68 606,102 610,146
+             C 612,174 596,200 570,214 C 542,228 506,232 474,226
+             C 438,218 406,200 382,178 C 354,152 330,120 318,92
+             C 306,66 294,54 308,38 Z"/>
+
+        <!-- Japan islands (separate) -->
+        <ellipse class="map-blob map-blob-sub" data-region="east"
+          cx="626" cy="96"  rx="15" ry="34" transform="rotate(-18 626 96)"/>
+        <ellipse class="map-blob map-blob-sub" data-region="east"
+          cx="638" cy="148" rx="9"  ry="20" transform="rotate(-15 638 148)"/>
+
+        <!-- ── SOUTH ASIA (India) ── -->
+        <path class="map-blob" id="blob-south" data-region="south"
+          d="M 80,152 C 112,136 166,140 198,160 C 224,176 234,208 228,242
+             C 222,274 204,298 184,320 C 166,340 148,358 136,362
+             C 122,364 110,350 100,326 C 86,292 78,254 74,220
+             C 70,188 74,164 80,152 Z"/>
+
+        <!-- ── SOUTHEAST ASIA (Vietnam / Indonesia / Bali) ── -->
+        <path class="map-blob" id="blob-southeast" data-region="southeast"
+          d="M 252,264 C 288,248 344,250 382,270 C 412,286 432,312 434,342
+             C 436,368 420,390 396,402 C 368,414 332,416 298,408
+             C 264,400 236,382 224,358 C 212,334 218,300 236,278
+             C 242,270 246,266 252,264 Z"/>
+
+        <!-- Indonesia island chain -->
+        <path class="map-blob map-blob-sub" data-region="southeast"
+          d="M 386,413 C 412,405 452,406 474,418 C 484,424 484,434 470,440
+             C 450,448 414,448 390,440 C 376,432 374,420 386,413 Z"/>
+        <ellipse class="map-blob map-blob-sub" data-region="southeast"
+          cx="508" cy="422" rx="22" ry="10" transform="rotate(-5 508 422)"/>
+
+        <!-- ── REGION LABELS ── -->
+        <text class="map-region-label" x="440" y="66" data-region="east">EAST ASIA</text>
+        <text class="map-region-label" x="88"  y="152" data-region="south">SOUTH ASIA</text>
+        <text class="map-region-label" x="254" y="258" data-region="southeast">SOUTHEAST ASIA</text>
+
+        <!-- ── INSTRUMENT DOTS — East Asia ── -->
+        <circle class="inst-dot" cx="382" cy="146" r="7" data-id="xun"/>
+        <circle class="inst-dot" cx="502" cy="160" r="7" data-id="gayageum"/>
+        <circle class="inst-dot" cx="524" cy="180" r="7" data-id="janggu"/>
+        <circle class="inst-dot" cx="626" cy="102" r="7" data-id="shakuhachi"/>
+
+        <!-- ── INSTRUMENT DOTS — South Asia ── -->
+        <circle class="inst-dot" cx="150" cy="218" r="7" data-id="veena"/>
+        <circle class="inst-dot" cx="154" cy="258" r="7" data-id="tabla"/>
+
+        <!-- ── INSTRUMENT DOTS — Southeast Asia ── -->
+        <circle class="inst-dot" cx="272" cy="308" r="7" data-id="dantranh"/>
+        <circle class="inst-dot" cx="374" cy="350" r="7" data-id="suling"/>
+        <circle class="inst-dot" cx="412" cy="368" r="7" data-id="gamelan"/>
+      </svg>
+
+      <!-- ── SIDE PANEL ── -->
+      <div class="map-panel" id="map-panel">
+        <div class="map-empty-state" id="map-empty">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="#C49A3C" stroke-width="1.5" opacity="0.5">
+            <circle cx="24" cy="24" r="20"/>
+            <path d="M24 14 C20 18 20 30 24 34 C28 30 28 18 24 14Z" opacity="0.6"/>
+            <line x1="4" y1="24" x2="44" y2="24"/>
+          </svg>
+          <p>Tap a region or instrument dot to explore</p>
+        </div>
+        <div id="map-panel-content" style="display:none"></div>
+      </div>
+    </div>
+  </section>
+
   <!-- ══ PERIODS ══ -->
   <main id="timeline"></main>
+
+  <!-- floating tooltip -->
+  <div class="map-tooltip" id="map-tooltip"></div>
 
   <footer class="site-footer">
     Echoes of Asia &nbsp;·&nbsp; An Interactive Musical Heritage Project
@@ -209,7 +309,7 @@ const timeline = document.getElementById('timeline');
 
 PERIODS.forEach(period => {
   const section = document.createElement('section');
-  section.className = 'period-section';
+  section.className = 'period-section fade-up';
 
   const natureKey = period.id;
   section.innerHTML = `
@@ -222,11 +322,11 @@ PERIODS.forEach(period => {
       </div>
     </div>
     <div class="instruments-grid">
-      ${period.instruments.map(id => {
+      ${period.instruments.map((id, cardIdx) => {
         const inst = INSTRUMENTS[id];
         const badgeClass = `badge-${inst.regionType}`;
         return `
-          <a href="instrument.html?id=${id}" class="instrument-card">
+          <a href="instrument.html?id=${id}" class="instrument-card fade-up" style="transition-delay:${cardIdx * 0.12}s">
             <span class="c tl"></span><span class="c tr"></span>
             <span class="c bl"></span><span class="c br"></span>
             <div class="card-icon-area">${ICONS[id] || ''}</div>
@@ -242,6 +342,106 @@ PERIODS.forEach(period => {
 
   timeline.appendChild(section);
 });
+
+/* ── SCROLL FADE-IN (Intersection Observer) ── */
+const scrollObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      scrollObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.08 });
+
+// Observe origins section + all period sections + cards
+document.querySelectorAll('.fade-up').forEach(el => scrollObserver.observe(el));
+
+/* ── HEADER PARALLAX ── */
+const headerNature = document.querySelector('.header-nature');
+if (headerNature) {
+  window.addEventListener('scroll', () => {
+    headerNature.style.transform = `translateY(${window.scrollY * 0.28}px)`;
+  }, { passive: true });
+}
+
+/* ── ASIA MAP INTERACTION ── */
+(function() {
+  const MAP_REGIONS = {
+    east:      { label: 'East Asia',      ids: ['xun','gayageum','janggu','shakuhachi'] },
+    south:     { label: 'South Asia',     ids: ['veena','tabla'] },
+    southeast: { label: 'Southeast Asia', ids: ['suling','gamelan','dantranh'] },
+  };
+
+  const panel        = document.getElementById('map-panel-content');
+  const emptyState   = document.getElementById('map-empty');
+  const tooltip      = document.getElementById('map-tooltip');
+  let activeRegion   = null;
+
+  function showPanel(regionKey) {
+    if (activeRegion === regionKey) return;
+    activeRegion = regionKey;
+    const info = MAP_REGIONS[regionKey];
+
+    // Highlight blobs
+    document.querySelectorAll('.map-blob').forEach(b => {
+      b.classList.toggle('active', b.dataset.region === regionKey);
+    });
+
+    // Pulse dots in region
+    document.querySelectorAll('.inst-dot').forEach(d => {
+      const inRegion = info.ids.includes(d.dataset.id);
+      d.classList.toggle('pulsing', inRegion);
+    });
+
+    // Build panel HTML
+    const items = info.ids.map(id => {
+      const inst = INSTRUMENTS[id];
+      const icon = ICONS[id] ? `<div class="map-inst-icon">${ICONS[id]}</div>` : '';
+      return `
+        <a class="map-inst-link" href="instrument.html?id=${id}">
+          ${icon}
+          <div>
+            <div class="map-inst-name">${inst.name}</div>
+            <div class="map-inst-sub">${inst.native} · ${inst.regionLabel.split(' · ')[1] || inst.region}</div>
+          </div>
+        </a>`;
+    }).join('');
+
+    panel.innerHTML = `<div class="map-panel-title">${info.label}</div>${items}`;
+    emptyState.style.display = 'none';
+    panel.style.display = 'block';
+  }
+
+  // Region blob clicks
+  document.querySelectorAll('.map-blob').forEach(blob => {
+    blob.addEventListener('click', () => showPanel(blob.dataset.region));
+  });
+  document.querySelectorAll('.map-region-label').forEach(lbl => {
+    lbl.style.cursor = 'pointer';
+    lbl.addEventListener('click', () => showPanel(lbl.dataset.region));
+  });
+
+  // Instrument dot clicks → navigate
+  document.querySelectorAll('.inst-dot').forEach(dot => {
+    dot.addEventListener('click', (e) => {
+      e.stopPropagation();
+      window.location.href = `instrument.html?id=${dot.dataset.id}`;
+    });
+
+    // Desktop tooltip
+    dot.addEventListener('mouseenter', (e) => {
+      const inst = INSTRUMENTS[dot.dataset.id];
+      if (!inst) return;
+      tooltip.textContent = `${inst.name} — ${inst.shortDesc}`;
+      tooltip.classList.add('show');
+    });
+    dot.addEventListener('mousemove', (e) => {
+      tooltip.style.left = (e.clientX + 14) + 'px';
+      tooltip.style.top  = (e.clientY - 28) + 'px';
+    });
+    dot.addEventListener('mouseleave', () => tooltip.classList.remove('show'));
+  });
+})();
 </script>
 </body>
 </html>

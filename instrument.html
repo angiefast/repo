@@ -75,6 +75,7 @@
   </div>
   <div class="play-area" id="play-area"></div>
   <div class="play-footer">
+    <canvas class="viz-canvas" id="viz-canvas"></canvas>
     <p class="play-hint" id="play-hint"></p>
     <p class="kb-hint" id="kb-hint"></p>
   </div>
@@ -220,10 +221,15 @@ document.getElementById('start-btn').addEventListener('click', () => {
   playView.classList.add('active');
   initPlay(inst, document.getElementById('play-area'));
   document.getElementById('kb-hint').textContent = getKbHint(inst);
+  // Start audio visualizer
+  const canvas = document.getElementById('viz-canvas');
+  canvas.width = window.innerWidth;
+  startVisualizer(canvas);
 });
 
 // Exit play
 document.getElementById('exit-btn').addEventListener('click', () => {
+  stopVisualizer();
   if (window._windCleanup) { window._windCleanup(); window._windCleanup = null; }
   if (window._kbCleanup)   { window._kbCleanup();   window._kbCleanup   = null; }
   document.getElementById('play-view').classList.remove('active');

@@ -2,12 +2,29 @@
    play.js — audio + touch interactions
 ═══════════════════════════════════════════ */
 
-let audioCtx = null;
+let audioCtx   = null;
+let masterDest = null;
+let vizAnalyser = null;
 
 function getAudio() {
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    // Route all audio through a master gain so the visualiser can tap it
+    masterDest = audioCtx.createGain();
+    masterDest.gain.value = 1;
+    masterDest.connect(audioCtx.destination);
+    vizAnalyser = audioCtx.createAnalyser();
+    vizAnalyser.fftSize = 512;
+    vizAnalyser.smoothingTimeConstant = 0.82;
+    masterDest.connect(vizAnalyser);
+  }
   if (audioCtx.state === 'suspended') audioCtx.resume();
   return audioCtx;
+}
+
+function getDest() {
+  getAudio();
+  return masterDest;
 }
 
 /* ── PLUCK (string instruments) ── */
@@ -16,7 +33,7 @@ function playPluck(freq) {
   const now    = ctx.currentTime;
   const master = ctx.createGain();
   master.gain.value = 0.5;
-  master.connect(ctx.destination);
+  master.connect(getDest());
 
   // Phone speakers can't reproduce frequencies below ~200 Hz, so we layer
   // the 2nd and 3rd harmonics alongside the fundamental. Those overtones sit
@@ -43,7 +60,7 @@ function playPluck(freq) {
 function playMetal(freq) {
   const ctx  = getAudio();
   const gain = ctx.createGain();
-  gain.connect(ctx.destination);
+  gain.connect(getDest());
   gain.gain.value = 0.35;
 
   [1, 2.76, 5.40].forEach((ratio, i) => {
@@ -83,7 +100,7 @@ function noiseBurst(ctx, dest, filterType, filterFreq, duration, peakGain) {
 /* ── TABLA DAYAN — snappy resonant "Na / Tin" ── */
 function playTablaHigh() {
   const ctx = getAudio(); const now = ctx.currentTime;
-  const master = ctx.createGain(); master.gain.value = 0.8; master.connect(ctx.destination);
+  const master = ctx.createGain(); master.gain.value = 0.8; master.connect(getDest());
   // Pitched tone: starts ~380Hz, settles down — like a tuned membrane
   const osc = ctx.createOscillator(); osc.type = 'sine';
   osc.frequency.setValueAtTime(380, now);
@@ -100,7 +117,7 @@ function playTablaHigh() {
 /* ── TABLA BAYAN — deep resonant "Ge / Dha" ── */
 function playTablaLow() {
   const ctx = getAudio(); const now = ctx.currentTime;
-  const master = ctx.createGain(); master.gain.value = 1.0; master.connect(ctx.destination);
+  const master = ctx.createGain(); master.gain.value = 1.0; master.connect(getDest());
   // Start at an audible 160Hz and drop — stays in phone speaker range
   const osc = ctx.createOscillator(); osc.type = 'sine';
   osc.frequency.setValueAtTime(160, now);
@@ -125,7 +142,7 @@ function playTablaLow() {
 /* ── JANGGU CHAE-PYEON — bright crack "Deok" ── */
 function playJangguHigh() {
   const ctx = getAudio(); const now = ctx.currentTime;
-  const master = ctx.createGain(); master.gain.value = 0.9; master.connect(ctx.destination);
+  const master = ctx.createGain(); master.gain.value = 0.9; master.connect(getDest());
   // Sharp crack — mostly noise
   noiseBurst(ctx, master, 'highpass', 2000, 0.04, 1.0);
   noiseBurst(ctx, master, 'bandpass', 900,  0.06, 0.7);
@@ -142,7 +159,7 @@ function playJangguHigh() {
 /* ── JANGGU GUNG-PYEON — deep boom "Kung" ── */
 function playJangguLow() {
   const ctx = getAudio(); const now = ctx.currentTime;
-  const master = ctx.createGain(); master.gain.value = 1.0; master.connect(ctx.destination);
+  const master = ctx.createGain(); master.gain.value = 1.0; master.connect(getDest());
   // Start at 140Hz — stays audible on phone speakers
   const osc = ctx.createOscillator(); osc.type = 'sine';
   osc.frequency.setValueAtTime(140, now);
@@ -173,7 +190,7 @@ function startWind(freq) {
   windGain = ctx.createGain();
   windGain.gain.setValueAtTime(0, ctx.currentTime);
   windGain.gain.linearRampToValueAtTime(0.08, ctx.currentTime + 0.06); // start quiet; poll loop drives actual level
-  windGain.connect(ctx.destination);
+  windGain.connect(getDest());
 
   windOsc = ctx.createOscillator();
   windOsc.type = 'sine';
@@ -381,6 +398,9 @@ function initWind(inst, container) {
     pressed[i] = 1;
     holeBtns[i].classList.add('pressed');
     noteDisplay.textContent = getCurrentName();
+    noteDisplay.classList.remove('popping');
+    void noteDisplay.offsetWidth;
+    noteDisplay.classList.add('popping');
     if (blowing) updateWindFreq(getCurrentFreq());
   }
   function releaseHoleByIdx(i) {
@@ -511,6 +531,7 @@ function initPercussion(inst, container) {
       const bar = gbars[idx]; if (!bar) return;
       bar.classList.add('hit');
       playMetal(inst.notes[idx]);
+      triggerRipple(bar);
       setTimeout(() => bar.classList.remove('hit'), 140);
     }
     gbars.forEach((bar, i) => {
@@ -543,6 +564,7 @@ function initPercussion(inst, container) {
       const drum = tdrums[idx]; if (!drum) return;
       drum.classList.add('hit');
       if (idx === 0) playTablaHigh(); else playTablaLow();
+      triggerRipple(drum);
       setTimeout(() => drum.classList.remove('hit'), 120);
     }
     tdrums.forEach((drum, i) => {
@@ -575,6 +597,7 @@ function initPercussion(inst, container) {
       const head = jheads[idx]; if (!head) return;
       head.classList.add('hit');
       if (idx === 0) playJangguHigh(); else playJangguLow();
+      triggerRipple(head);
       setTimeout(() => head.classList.remove('hit'), 120);
     }
     jheads.forEach((head, i) => {
@@ -589,6 +612,56 @@ function initPercussion(inst, container) {
     document.addEventListener('keydown', onKbDown);
     window._kbCleanup = () => document.removeEventListener('keydown', onKbDown);
   }
+}
+
+/* ════════════════════════════════════════
+   VISUALIZER — canvas frequency bars
+════════════════════════════════════════ */
+let vizRaf = null;
+
+function startVisualizer(canvas) {
+  if (!canvas) return;
+  stopVisualizer();
+  // Resize canvas pixel buffer to match CSS size
+  canvas.width  = canvas.offsetWidth  || 600;
+  canvas.height = canvas.offsetHeight || 52;
+  const c = canvas.getContext('2d');
+
+  function draw() {
+    const w = canvas.width, h = canvas.height;
+    c.clearRect(0, 0, w, h);
+    if (vizAnalyser) {
+      const buf = new Uint8Array(vizAnalyser.frequencyBinCount);
+      vizAnalyser.getByteFrequencyData(buf);
+      const barCount = 60;
+      const step = Math.floor(buf.length / barCount);
+      const barW  = w / barCount;
+      for (let i = 0; i < barCount; i++) {
+        const val  = buf[i * step] / 255;
+        const bh   = val * h;
+        const alpha = 0.15 + val * 0.75;
+        c.fillStyle = `rgba(196, 154, 60, ${alpha})`;
+        c.fillRect(i * barW + 1, h - bh, barW - 2, bh);
+      }
+    }
+    vizRaf = requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+function stopVisualizer() {
+  if (vizRaf) { cancelAnimationFrame(vizRaf); vizRaf = null; }
+}
+
+/* ════════════════════════════════════════
+   RIPPLE — expanding ring on percussion hit
+════════════════════════════════════════ */
+function triggerRipple(el) {
+  if (!el) return;
+  const ring = document.createElement('div');
+  ring.className = 'ripple-ring';
+  el.appendChild(ring);
+  setTimeout(() => ring.remove(), 580);
 }
 
 /* ════════════════════════════════════════
