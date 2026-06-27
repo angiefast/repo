@@ -583,8 +583,10 @@ body::before {
 
 .play-hint {
   font-size: 12px;
-  color: rgba(255,255,255,0.3);
-  letter-spacing: 0.5px;
+  color: rgba(255,255,255,0.45);
+  letter-spacing: 0.3px;
+  line-height: 1.7;
+  white-space: pre-line; /* lets us use \n if needed */
 }
 
 /* ── STRING INTERFACE ── */
