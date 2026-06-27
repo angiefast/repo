@@ -326,15 +326,20 @@ function initWind(inst, container) {
   let rafId       = null;
   let stopTimer   = null;
 
-  function getCurrentFreq() {
-    // Number of holes pressed determines the note — intuitive and always distinct
-    const idx = Math.min(pressed.filter(p => p).length, notes.length - 1);
-    return notes[idx];
+  function getPressedIdx() {
+    const active = pressed.reduce((a, v, i) => { if (v) a.push(i); return a; }, []);
+    if (!active.length) return 0;
+    // Average position of pressed holes, scaled to the note range.
+    // This makes WHICH holes you press matter: holes 1+2 (low avg) vs 4+5 (high avg)
+    // map to different notes even though both are 2 holes.
+    const avg = active.reduce((a, b) => a + b, 0) / active.length;
+    return Math.min(
+      Math.round(avg * (notes.length - 1) / (pressed.length - 1)),
+      notes.length - 1
+    );
   }
-  function getCurrentName() {
-    const idx = Math.min(pressed.filter(p => p).length, names.length - 1);
-    return names[idx] || '—';
-  }
+  function getCurrentFreq() { return notes[getPressedIdx()]; }
+  function getCurrentName() { return names[getPressedIdx()] || '—'; }
 
   function setBlowing(on) {
     if (on) {
