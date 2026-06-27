@@ -776,6 +776,24 @@ body::before {
 
 .janggu-head.hit { background: rgba(196,154,60,0.35); }
 
+/* ── INSTRUMENT PHOTO ── */
+.instrument-photo-wrap {
+  margin-bottom: 28px;
+}
+
+.instrument-photo {
+  width: 100%;
+  max-height: 280px;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+  border-radius: 6px;
+  border: 1px solid rgba(196,154,60,0.35);
+  /* Sepia tone to match the parchment/ancient-Asia theme */
+  filter: sepia(0.42) contrast(1.06) brightness(0.93) saturate(0.85);
+  box-shadow: 0 2px 12px rgba(26,13,7,0.12);
+}
+
 /* ── RESPONSIVE ── */
 @media (max-width: 680px) {
   .site-title { font-size: 40px; }

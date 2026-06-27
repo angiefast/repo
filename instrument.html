@@ -37,6 +37,7 @@
 
   <!-- INFO -->
   <div class="info-section">
+    <div class="instrument-photo-wrap" id="photo-wrap"></div>
     <div class="info-block">
       <div class="info-label">History &amp; Origins</div>
       <p class="info-text" id="info-history"></p>
@@ -179,6 +180,17 @@ rb.textContent = inst.regionLabel;
 rb.className   = `region-badge badge-${inst.regionType}`;
 
 document.getElementById('type-badge').textContent = inst.typeLabel;
+
+// Instrument photo
+const photoWrap = document.getElementById('photo-wrap');
+if (inst.photo) {
+  const img = document.createElement('img');
+  img.src = inst.photo;
+  img.alt = inst.name;
+  img.className = 'instrument-photo';
+  img.loading = 'lazy';
+  photoWrap.appendChild(img);
+}
 
 // Start playing
 document.getElementById('start-btn').addEventListener('click', () => {

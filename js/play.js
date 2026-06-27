@@ -52,6 +52,7 @@ function playMetal(freq) {
 
 /* ── NOISE BURST helper ── */
 function noiseBurst(ctx, dest, filterType, filterFreq, duration, peakGain) {
+  if (!duration || duration <= 0) return;
   const now = ctx.currentTime;
   const len = Math.ceil(ctx.sampleRate * duration);
   const buf = ctx.createBuffer(1, len, ctx.sampleRate);
@@ -305,6 +306,7 @@ function initWind(inst, container) {
 
   let pressed     = new Array(holes.length).fill(0);
   let blowing     = false;
+  let holdActive  = false; // true while the Hold to Blow button is physically pressed
   let micStream   = null;
   let analyser    = null;
   let rafId       = null;
@@ -363,12 +365,16 @@ function initWind(inst, container) {
     btn.addEventListener('mouseleave', releaseHole);
   });
 
-  /* ── HOLD-TO-BLOW FALLBACK ── */
-  holdBtn.addEventListener('touchstart', e => { e.preventDefault(); setBlowing(true);  }, { passive: false });
-  holdBtn.addEventListener('touchend',   e => { e.preventDefault(); setBlowing(false); }, { passive: false });
-  holdBtn.addEventListener('mousedown',  ()  => setBlowing(true));
-  holdBtn.addEventListener('mouseup',    ()  => setBlowing(false));
-  holdBtn.addEventListener('mouseleave', ()  => setBlowing(false));
+  /* ── HOLD-TO-BLOW ──
+     holdActive blocks the mic-poll from stopping the wind so the button
+     can be held indefinitely while pressing holes to change notes. */
+  function holdStart() { holdActive = true;  setBlowing(true);  }
+  function holdEnd()   { holdActive = false; setBlowing(false); }
+  holdBtn.addEventListener('touchstart', e => { e.preventDefault(); holdStart(); }, { passive: false });
+  holdBtn.addEventListener('touchend',   e => { e.preventDefault(); holdEnd();   }, { passive: false });
+  holdBtn.addEventListener('mousedown',  holdStart);
+  holdBtn.addEventListener('mouseup',    holdEnd);
+  holdBtn.addEventListener('mouseleave', () => { if (holdActive) holdEnd(); });
 
   /* ── MIC SETUP ──
      CRITICAL: call getAudio() BEFORE the await so the AudioContext is created
@@ -383,9 +389,8 @@ function initWind(inst, container) {
       analyser  = ctx.createAnalyser();
       analyser.fftSize = 256;
       src.connect(analyser);
-      micActive = true;
       blowLabel.textContent = 'Make any sound into your mic  ·  or hold the button below';
-      holdBtn.textContent   = 'Hold to Blow (fallback)';
+      holdBtn.textContent   = 'Hold to Blow';
       pollMic();
     } catch (err) {
       blowLabel.textContent = 'Mic unavailable — hold the button below to play';
@@ -405,19 +410,16 @@ function initWind(inst, container) {
       // Breath meter scales to MAX_VOL
       breathFill.style.width = Math.min(100, (vol / MAX_VOL) * 100) + '%';
 
-      if (vol > THRESHOLD) {
-        // Map blow intensity → gain: gentle breath = 0.08, hard blow = 0.7
-        const t = Math.min(1, (vol - THRESHOLD) / (MAX_VOL - THRESHOLD));
-        const targetGain = 0.08 + t * 0.62;
-
-        setBlowing(true);
-
-        // Continuously update gain so volume tracks breath pressure
-        if (windGain) {
-          windGain.gain.setTargetAtTime(targetGain, getAudio().currentTime, 0.04);
+      // Don't let the mic poll override the Hold to Blow button
+      if (!holdActive) {
+        if (vol > THRESHOLD) {
+          const t = Math.min(1, (vol - THRESHOLD) / (MAX_VOL - THRESHOLD));
+          const targetGain = 0.08 + t * 0.62;
+          setBlowing(true);
+          if (windGain) windGain.gain.setTargetAtTime(targetGain, getAudio().currentTime, 0.04);
+        } else {
+          setBlowing(false);
         }
-      } else {
-        setBlowing(false);
       }
 
       rafId = requestAnimationFrame(tick);
@@ -516,6 +518,10 @@ function initPercussion(inst, container) {
    ROUTER — called from instrument.html
 ════════════════════════════════════════ */
 function initPlay(inst, container) {
+  // Pre-create/resume AudioContext while we're still inside the user gesture.
+  // This is required on iOS/Safari — creating it later (on first drum tap, etc.)
+  // may silently fail because the gesture window has closed.
+  getAudio();
   if (inst.type === 'string')     initString(inst, container);
   else if (inst.type === 'wind')  initWind(inst, container);
   else if (inst.type === 'percussion') initPercussion(inst, container);

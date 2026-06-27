@@ -11,6 +11,7 @@ const INSTRUMENTS = {
     noteNames: ['C', 'D', 'E', 'G', 'A'],
     holes: ['①', '②', '③', '④', '⑤'],
     combos: { '00000':0, '10000':0, '11000':1, '01000':1, '11100':2, '11010':2, '11110':3, '11111':4 },
+    photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Xunfront.jpg',
   },
   suling: {
     id: 'suling', name: 'Suling', native: 'ᬲᬸᬮᬶᬂ',
@@ -24,6 +25,7 @@ const INSTRUMENTS = {
     noteNames: ['D', 'E', 'F♯', 'A', 'B'],
     holes: ['①', '②', '③', '④'],
     combos: { '0000':0, '1000':0, '1100':1, '1110':2, '0110':2, '1111':3, '0111':4 },
+    photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Kacapi-suling.JPG',
   },
   veena: {
     id: 'veena', name: 'Veena', native: 'வீணை',
@@ -36,6 +38,7 @@ const INSTRUMENTS = {
     notes: [196.00, 220.00, 261.63, 293.66, 329.63],
     noteNames: ['Sa', 'Ri', 'Ga', 'Pa', 'Dha'],
     stringColor: '#C8895A',
+    photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Veena_Vina_string_musical_instrument_India.jpg',
   },
   gayageum: {
     id: 'gayageum', name: 'Gayageum', native: '가야금',
@@ -48,6 +51,7 @@ const INSTRUMENTS = {
     notes: [261.63, 311.13, 349.23, 392.00, 466.16, 523.25, 622.25, 698.46],
     noteNames: ['황', '태', '중', '임', '남', '청황', '청태', '청중'],
     stringColor: '#E8E0C0',
+    photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Korean_Ka_Ya_Kum_(Gayageum),_Traditional_12-string_Instrument.jpg',
   },
   gamelan: {
     id: 'gamelan', name: 'Gamelan', native: 'ᬕᬫᭂᬮᬦ᭄',
@@ -60,6 +64,7 @@ const INSTRUMENTS = {
     notes: [261.63, 329.63, 392.00, 523.25, 659.25],
     noteNames: ['Nem', 'Ro', 'Lu', 'Lima', 'Barang'],
     bars: ['Nem', 'Ro', 'Lu', 'Lima', 'Barang'],
+    photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Gamelan_degung,_Musical_Instruments_Museum,_Phoenix,_Arizona.jpg',
   },
   tabla: {
     id: 'tabla', name: 'Tabla', native: 'तबला',
@@ -75,6 +80,7 @@ const INSTRUMENTS = {
       { label: 'Dayan', sub: 'Na · Tin · Ta', note: 0 },
       { label: 'Bayan', sub: 'Ge · Dha · Ka', note: 1 },
     ],
+    photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Prop._Tabla.jpg',
   },
   janggu: {
     id: 'janggu', name: 'Janggu', native: '장구',
@@ -89,6 +95,7 @@ const INSTRUMENTS = {
       { label: '채편', sub: 'Deok · bright', note: 0 },
       { label: '궁편', sub: 'Kung · deep', note: 1 },
     ],
+    photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Korean.Music-Janggu-01.jpg',
   },
   dantranh: {
     id: 'dantranh', name: 'Đàn Tranh', native: 'đàn tranh',
@@ -101,6 +108,7 @@ const INSTRUMENTS = {
     notes: [293.66, 349.23, 392.00, 466.16, 523.25, 587.33],
     noteNames: ['Hò', 'Xự', 'Sang', 'Xê', 'Cống', 'Liu'],
     stringColor: '#A8C0C8',
+    photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Flickr_-_dalbera_-_Huong_Thanh_Trio,_(mus%C3%A9e_Guimet,_Paris).jpg',
   },
   shakuhachi: {
     id: 'shakuhachi', name: 'Shakuhachi', native: '尺八',
@@ -114,6 +122,7 @@ const INSTRUMENTS = {
     noteNames: ['D', 'E', 'G', 'A', 'D\''],
     holes: ['①', '②', '③', '④', '⑤'],
     combos: { '00000':0, '10000':0, '11000':1, '11100':2, '11110':3, '11111':4 },
+    photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Shakuhachi-2.png',
   },
 };
 
