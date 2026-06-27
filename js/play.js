@@ -275,6 +275,20 @@ function initString(inst, container) {
     const row = e.target.closest('.string-row');
     if (row) pluckRow(row);
   });
+
+  /* ── KEYBOARD ── number keys pluck the corresponding string */
+  const rows = Array.from(container.querySelectorAll('.string-row'));
+  function onKbDown(e) {
+    if (e.repeat || e.ctrlKey || e.metaKey || e.altKey) return;
+    const num = parseInt(e.key);
+    if (num >= 1 && num <= rows.length) {
+      e.preventDefault();
+      lastIdx = -1; // allow same string to re-trigger on keyboard
+      pluckRow(rows[num - 1]);
+    }
+  }
+  document.addEventListener('keydown', onKbDown);
+  window._kbCleanup = () => document.removeEventListener('keydown', onKbDown);
 }
 
 /* ════════════════════════════════════════
@@ -344,25 +358,26 @@ function initWind(inst, container) {
     }
   }
 
-  /* ── HOLE BUTTONS — also trigger note preview on their own ── */
-  holeBtns.forEach(btn => {
-    const i = parseInt(btn.dataset.hole);
-    function pressHole() {
-      pressed[i] = 1;
-      btn.classList.add('pressed');
-      noteDisplay.textContent = getCurrentName();
-      if (blowing) updateWindFreq(getCurrentFreq());
-    }
-    function releaseHole() {
-      pressed[i] = 0;
-      btn.classList.remove('pressed');
-      if (blowing) updateWindFreq(getCurrentFreq());
-    }
-    btn.addEventListener('touchstart', e => { e.preventDefault(); pressHole();   }, { passive: false });
-    btn.addEventListener('touchend',   e => { e.preventDefault(); releaseHole(); }, { passive: false });
-    btn.addEventListener('mousedown',  pressHole);
-    btn.addEventListener('mouseup',    releaseHole);
-    btn.addEventListener('mouseleave', releaseHole);
+  /* ── HOLE BUTTONS ── */
+  function pressHoleByIdx(i) {
+    if (i < 0 || i >= holeBtns.length) return;
+    pressed[i] = 1;
+    holeBtns[i].classList.add('pressed');
+    noteDisplay.textContent = getCurrentName();
+    if (blowing) updateWindFreq(getCurrentFreq());
+  }
+  function releaseHoleByIdx(i) {
+    if (i < 0 || i >= holeBtns.length) return;
+    pressed[i] = 0;
+    holeBtns[i].classList.remove('pressed');
+    if (blowing) updateWindFreq(getCurrentFreq());
+  }
+  holeBtns.forEach((btn, i) => {
+    btn.addEventListener('touchstart', e => { e.preventDefault(); pressHoleByIdx(i);   }, { passive: false });
+    btn.addEventListener('touchend',   e => { e.preventDefault(); releaseHoleByIdx(i); }, { passive: false });
+    btn.addEventListener('mousedown',  () => pressHoleByIdx(i));
+    btn.addEventListener('mouseup',    () => releaseHoleByIdx(i));
+    btn.addEventListener('mouseleave', () => releaseHoleByIdx(i));
   });
 
   /* ── HOLD-TO-BLOW ──
@@ -375,6 +390,26 @@ function initWind(inst, container) {
   holdBtn.addEventListener('mousedown',  holdStart);
   holdBtn.addEventListener('mouseup',    holdEnd);
   holdBtn.addEventListener('mouseleave', () => { if (holdActive) holdEnd(); });
+
+  /* ── KEYBOARD ── numbers = holes · Space = blow */
+  function onKbDown(e) {
+    if (e.repeat || e.ctrlKey || e.metaKey || e.altKey) return;
+    const num = parseInt(e.key);
+    if (num >= 1 && num <= holes.length) { e.preventDefault(); pressHoleByIdx(num - 1); }
+    if (e.code === 'Space') { e.preventDefault(); holdStart(); }
+  }
+  function onKbUp(e) {
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    const num = parseInt(e.key);
+    if (num >= 1 && num <= holes.length) { e.preventDefault(); releaseHoleByIdx(num - 1); }
+    if (e.code === 'Space') { e.preventDefault(); holdEnd(); }
+  }
+  document.addEventListener('keydown', onKbDown);
+  document.addEventListener('keyup',   onKbUp);
+  window._kbCleanup = () => {
+    document.removeEventListener('keydown', onKbDown);
+    document.removeEventListener('keyup',   onKbUp);
+  };
 
   /* ── MIC SETUP ──
      CRITICAL: call getAudio() BEFORE the await so the AudioContext is created
@@ -454,15 +489,24 @@ function initPercussion(inst, container) {
         </div>
       </div>`;
 
-    container.querySelectorAll('.gbar').forEach(bar => {
-      function hit() {
-        bar.classList.add('hit');
-        playMetal(inst.notes[parseInt(bar.dataset.idx)]);
-        setTimeout(() => bar.classList.remove('hit'), 140);
-      }
-      bar.addEventListener('touchstart', e => { e.preventDefault(); hit(); }, { passive: false });
-      bar.addEventListener('mousedown', hit);
+    const gbars = Array.from(container.querySelectorAll('.gbar'));
+    function hitBar(idx) {
+      const bar = gbars[idx]; if (!bar) return;
+      bar.classList.add('hit');
+      playMetal(inst.notes[idx]);
+      setTimeout(() => bar.classList.remove('hit'), 140);
+    }
+    gbars.forEach((bar, i) => {
+      bar.addEventListener('touchstart', e => { e.preventDefault(); hitBar(i); }, { passive: false });
+      bar.addEventListener('mousedown', () => hitBar(i));
     });
+    function onKbDown(e) {
+      if (e.repeat || e.ctrlKey || e.metaKey || e.altKey) return;
+      const num = parseInt(e.key);
+      if (num >= 1 && num <= gbars.length) { e.preventDefault(); hitBar(num - 1); }
+    }
+    document.addEventListener('keydown', onKbDown);
+    window._kbCleanup = () => document.removeEventListener('keydown', onKbDown);
 
   } else if (layout === 'tabla') {
     const pads = inst.pads;
@@ -477,16 +521,24 @@ function initPercussion(inst, container) {
         </div>
       </div>`;
 
-    container.querySelectorAll('.tabla-drum').forEach(drum => {
-      function hit() {
-        drum.classList.add('hit');
-        const idx = parseInt(drum.dataset.idx);
-        if (idx === 0) playTablaHigh(); else playTablaLow();
-        setTimeout(() => drum.classList.remove('hit'), 120);
-      }
-      drum.addEventListener('touchstart', e => { e.preventDefault(); hit(); }, { passive: false });
-      drum.addEventListener('mousedown', hit);
+    const tdrums = Array.from(container.querySelectorAll('.tabla-drum'));
+    function hitTabla(idx) {
+      const drum = tdrums[idx]; if (!drum) return;
+      drum.classList.add('hit');
+      if (idx === 0) playTablaHigh(); else playTablaLow();
+      setTimeout(() => drum.classList.remove('hit'), 120);
+    }
+    tdrums.forEach((drum, i) => {
+      drum.addEventListener('touchstart', e => { e.preventDefault(); hitTabla(i); }, { passive: false });
+      drum.addEventListener('mousedown', () => hitTabla(i));
     });
+    function onKbDown(e) {
+      if (e.repeat || e.ctrlKey || e.metaKey || e.altKey) return;
+      const num = parseInt(e.key);
+      if (num === 1 || num === 2) { e.preventDefault(); hitTabla(num - 1); }
+    }
+    document.addEventListener('keydown', onKbDown);
+    window._kbCleanup = () => document.removeEventListener('keydown', onKbDown);
 
   } else if (layout === 'janggu') {
     const pads = inst.pads;
@@ -501,16 +553,24 @@ function initPercussion(inst, container) {
         </div>
       </div>`;
 
-    container.querySelectorAll('.janggu-head').forEach(head => {
-      function hit() {
-        head.classList.add('hit');
-        const idx = parseInt(head.dataset.idx);
-        if (idx === 0) playJangguHigh(); else playJangguLow();
-        setTimeout(() => head.classList.remove('hit'), 120);
-      }
-      head.addEventListener('touchstart', e => { e.preventDefault(); hit(); }, { passive: false });
-      head.addEventListener('mousedown', hit);
+    const jheads = Array.from(container.querySelectorAll('.janggu-head'));
+    function hitJanggu(idx) {
+      const head = jheads[idx]; if (!head) return;
+      head.classList.add('hit');
+      if (idx === 0) playJangguHigh(); else playJangguLow();
+      setTimeout(() => head.classList.remove('hit'), 120);
+    }
+    jheads.forEach((head, i) => {
+      head.addEventListener('touchstart', e => { e.preventDefault(); hitJanggu(i); }, { passive: false });
+      head.addEventListener('mousedown', () => hitJanggu(i));
     });
+    function onKbDown(e) {
+      if (e.repeat || e.ctrlKey || e.metaKey || e.altKey) return;
+      const num = parseInt(e.key);
+      if (num === 1 || num === 2) { e.preventDefault(); hitJanggu(num - 1); }
+    }
+    document.addEventListener('keydown', onKbDown);
+    window._kbCleanup = () => document.removeEventListener('keydown', onKbDown);
   }
 }
 

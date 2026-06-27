@@ -67,6 +67,7 @@
   <div class="play-area" id="play-area"></div>
   <div class="play-footer">
     <p class="play-hint" id="play-hint"></p>
+    <p class="kb-hint" id="kb-hint"></p>
   </div>
 </div>
 
@@ -192,17 +193,30 @@ if (inst.photo) {
   photoWrap.appendChild(img);
 }
 
+// Keyboard hint per instrument type
+function getKbHint(inst) {
+  if (inst.type === 'string')
+    return `Keyboard: keys 1–${inst.notes.length} to pluck each string`;
+  if (inst.type === 'wind')
+    return `Keyboard: keys 1–${inst.holes.length} for holes · Space to blow`;
+  if (inst.layout === 'gamelan')
+    return 'Keyboard: keys 1–5 to hit each bar';
+  return 'Keyboard: 1 = left drum · 2 = right drum';
+}
+
 // Start playing
 document.getElementById('start-btn').addEventListener('click', () => {
   document.getElementById('info-view').style.display = 'none';
   const playView = document.getElementById('play-view');
   playView.classList.add('active');
   initPlay(inst, document.getElementById('play-area'));
+  document.getElementById('kb-hint').textContent = getKbHint(inst);
 });
 
 // Exit play
 document.getElementById('exit-btn').addEventListener('click', () => {
   if (window._windCleanup) { window._windCleanup(); window._windCleanup = null; }
+  if (window._kbCleanup)   { window._kbCleanup();   window._kbCleanup   = null; }
   document.getElementById('play-view').classList.remove('active');
   document.getElementById('play-area').innerHTML = '';
   document.getElementById('info-view').style.display = '';

@@ -776,6 +776,15 @@ body::before {
 
 .janggu-head.hit { background: rgba(196,154,60,0.35); }
 
+/* ── KEYBOARD HINT ── */
+.kb-hint {
+  font-size: 11px;
+  color: var(--ink-light);
+  opacity: 0.65;
+  margin-top: 6px;
+  letter-spacing: 0.03em;
+}
+
 /* ── INSTRUMENT PHOTO ── */
 .instrument-photo-wrap {
   margin-bottom: 28px;
