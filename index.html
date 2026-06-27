@@ -1,15 +1,239 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>My App</title>
-  <link rel="stylesheet" href="styles.css" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Echoes of Asia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css"/>
 </head>
 <body>
+<div class="page-content">
 
-  <h1>hello world</h1>
+  <!-- ══ HEADER ══ -->
+  <header class="site-header">
+    <!-- Semi-transparent mountain + cherry blossom nature art -->
+    <svg class="header-nature" viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <!-- Mountain layers -->
+      <path d="M0,300 L120,160 L200,220 L330,90 L460,190 L560,110 L680,200 L800,80 L920,170 L1040,95 L1140,160 L1200,130 L1200,300 Z" fill="#4A6741"/>
+      <path d="M0,300 L160,220 L280,260 L380,190 L500,240 L620,180 L740,250 L860,185 L980,240 L1100,200 L1200,230 L1200,300 Z" fill="#3A5731" opacity="0.6"/>
+      <!-- Cherry blossom branch (top left) -->
+      <path d="M0,80 Q120,50 220,75 Q280,88 340,55 Q390,30 440,48 Q470,60 510,35" stroke="#5A3820" stroke-width="4" fill="none" opacity="0.5"/>
+      <path d="M220,75 Q230,30 240,10" stroke="#5A3820" stroke-width="2.5" fill="none" opacity="0.4"/>
+      <path d="M340,55 Q355,18 365,0" stroke="#5A3820" stroke-width="2" fill="none" opacity="0.35"/>
+      <!-- Blossoms -->
+      <circle cx="240" cy="9"  r="8" fill="#D4A8A8" opacity="0.7"/>
+      <circle cx="252" cy="4"  r="6" fill="#C89898" opacity="0.6"/>
+      <circle cx="228" cy="5"  r="5" fill="#D4A8A8" opacity="0.5"/>
+      <circle cx="258" cy="14" r="5" fill="#E0B8B8" opacity="0.5"/>
+      <circle cx="365" cy="0"  r="8" fill="#D4A8A8" opacity="0.6"/>
+      <circle cx="376" cy="5"  r="6" fill="#C89898" opacity="0.5"/>
+      <circle cx="356" cy="6"  r="5" fill="#D4A8A8" opacity="0.45"/>
+      <!-- Mist lines -->
+      <line x1="0" y1="200" x2="1200" y2="200" stroke="white" stroke-width="1.5" opacity="0.15"/>
+      <line x1="0" y1="220" x2="1200" y2="220" stroke="white" stroke-width="1" opacity="0.10"/>
+    </svg>
 
-  <script src="script.js"></script>
+    <div class="header-content">
+      <p class="site-eyebrow">An Interactive Journey Through Time</p>
+      <h1 class="site-title">Echoes of Asia</h1>
+      <p class="site-subtitle">Explore nine traditional instruments across three millennia of Asian musical heritage — and play them yourself.</p>
+      <div class="header-ornament">
+        <div class="ornament-line"></div>
+        <div class="ornament-diamond"></div>
+        <div class="ornament-line"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ══ PERIODS ══ -->
+  <main id="timeline"></main>
+
+  <footer class="site-footer">
+    Echoes of Asia &nbsp;·&nbsp; An Interactive Musical Heritage Project
+  </footer>
+
+</div>
+
+<script src="js/instruments.js"></script>
+<script>
+/* ── INSTRUMENT SVG ICONS ── */
+const ICONS = {
+  // Wind
+  xun: `<svg viewBox="0 0 72 72" fill="none" stroke="currentColor" stroke-width="1.8" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="36" cy="40" rx="26" ry="28"/>
+    <circle cx="36" cy="22" r="4.5" stroke-width="1.5"/>
+    <circle cx="22" cy="33" r="3.5" stroke-width="1.5"/>
+    <circle cx="50" cy="33" r="3.5" stroke-width="1.5"/>
+    <circle cx="26" cy="49" r="3.5" stroke-width="1.5"/>
+    <circle cx="46" cy="49" r="3.5" stroke-width="1.5"/>
+  </svg>`,
+  suling: `<svg viewBox="0 0 72 72" fill="none" stroke="currentColor" stroke-width="1.8" xmlns="http://www.w3.org/2000/svg">
+    <rect x="6" y="30" width="60" height="13" rx="6.5" transform="rotate(-18 36 36)"/>
+    <circle cx="20" cy="33" r="2.5" fill="currentColor" transform="rotate(-18 36 36)" opacity="0.7"/>
+    <circle cx="30" cy="33" r="2.5" fill="currentColor" transform="rotate(-18 36 36)" opacity="0.7"/>
+    <circle cx="40" cy="33" r="2.5" fill="currentColor" transform="rotate(-18 36 36)" opacity="0.7"/>
+    <circle cx="50" cy="33" r="2.5" fill="currentColor" transform="rotate(-18 36 36)" opacity="0.7"/>
+  </svg>`,
+  shakuhachi: `<svg viewBox="0 0 72 72" fill="none" stroke="currentColor" stroke-width="1.8" xmlns="http://www.w3.org/2000/svg">
+    <rect x="30" y="4" width="12" height="64" rx="6" transform="rotate(10 36 36)"/>
+    <circle cx="36" cy="20" r="2.2" fill="currentColor" opacity="0.7" transform="rotate(10 36 36)"/>
+    <circle cx="36" cy="30" r="2.2" fill="currentColor" opacity="0.7" transform="rotate(10 36 36)"/>
+    <circle cx="36" cy="40" r="2.2" fill="currentColor" opacity="0.7" transform="rotate(10 36 36)"/>
+    <circle cx="36" cy="50" r="2.2" fill="currentColor" opacity="0.7" transform="rotate(10 36 36)"/>
+  </svg>`,
+  // String
+  veena: `<svg viewBox="0 0 72 72" fill="none" stroke="currentColor" stroke-width="1.8" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="36" cy="56" rx="16" ry="13"/>
+    <ellipse cx="28" cy="20" rx="9" ry="7"/>
+    <path d="M36,43 Q38,30 28,27"/>
+    <line x1="14" y1="20" x2="58" y2="20" stroke-width="1.2" opacity="0.4"/>
+    <path d="M58,20 Q64,20 64,14" stroke-width="1.5"/>
+  </svg>`,
+  gayageum: `<svg viewBox="0 0 72 72" fill="none" stroke="currentColor" stroke-width="1.8" xmlns="http://www.w3.org/2000/svg">
+    <rect x="8" y="26" width="56" height="22" rx="3"/>
+    <line x1="15" y1="30" x2="15" y2="44" stroke-width="1.2" opacity="0.6"/>
+    <line x1="22" y1="30" x2="22" y2="44" stroke-width="1.2" opacity="0.6"/>
+    <line x1="29" y1="30" x2="29" y2="44" stroke-width="1.2" opacity="0.6"/>
+    <line x1="36" y1="30" x2="36" y2="44" stroke-width="1.2" opacity="0.6"/>
+    <line x1="43" y1="30" x2="43" y2="44" stroke-width="1.2" opacity="0.6"/>
+    <line x1="50" y1="30" x2="50" y2="44" stroke-width="1.2" opacity="0.6"/>
+    <line x1="57" y1="30" x2="57" y2="44" stroke-width="1.2" opacity="0.6"/>
+  </svg>`,
+  dantranh: `<svg viewBox="0 0 72 72" fill="none" stroke="currentColor" stroke-width="1.8" xmlns="http://www.w3.org/2000/svg">
+    <rect x="4" y="28" width="64" height="18" rx="3"/>
+    <line x1="11" y1="32" x2="11" y2="42" stroke-width="1.1" opacity="0.55"/>
+    <line x1="18" y1="32" x2="18" y2="42" stroke-width="1.1" opacity="0.55"/>
+    <line x1="25" y1="32" x2="25" y2="42" stroke-width="1.1" opacity="0.55"/>
+    <line x1="32" y1="32" x2="32" y2="42" stroke-width="1.1" opacity="0.55"/>
+    <line x1="39" y1="32" x2="39" y2="42" stroke-width="1.1" opacity="0.55"/>
+    <line x1="46" y1="32" x2="46" y2="42" stroke-width="1.1" opacity="0.55"/>
+    <line x1="53" y1="32" x2="53" y2="42" stroke-width="1.1" opacity="0.55"/>
+    <line x1="60" y1="32" x2="60" y2="42" stroke-width="1.1" opacity="0.55"/>
+    <!-- Bridges -->
+    <rect x="14" y="27" width="3" height="8" rx="1" fill="currentColor" opacity="0.3"/>
+    <rect x="30" y="27" width="3" height="8" rx="1" fill="currentColor" opacity="0.3"/>
+    <rect x="46" y="27" width="3" height="8" rx="1" fill="currentColor" opacity="0.3"/>
+  </svg>`,
+  // Percussion
+  gamelan: `<svg viewBox="0 0 72 72" fill="none" stroke="currentColor" stroke-width="1.8" xmlns="http://www.w3.org/2000/svg">
+    <rect x="6"  y="20" width="60" height="10" rx="3"/>
+    <rect x="9"  y="33" width="54" height="9"  rx="3"/>
+    <rect x="13" y="45" width="46" height="8"  rx="3"/>
+    <rect x="17" y="56" width="38" height="7"  rx="3"/>
+  </svg>`,
+  tabla: `<svg viewBox="0 0 72 72" fill="none" stroke="currentColor" stroke-width="1.8" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="22" cy="36" rx="16" ry="18"/>
+    <ellipse cx="22" cy="36" rx="10" ry="11" stroke-width="1.2" opacity="0.5"/>
+    <ellipse cx="54" cy="40" rx="13" ry="15"/>
+    <ellipse cx="54" cy="40" rx="8"  ry="9"  stroke-width="1.2" opacity="0.5"/>
+  </svg>`,
+  janggu: `<svg viewBox="0 0 72 72" fill="none" stroke="currentColor" stroke-width="1.8" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="14" cy="36" rx="11" ry="20"/>
+    <ellipse cx="58" cy="36" rx="11" ry="20"/>
+    <path d="M25,22 Q36,30 47,22"/>
+    <path d="M25,50 Q36,42 47,50"/>
+    <line x1="36" y1="22" x2="36" y2="50" stroke-width="1.2" opacity="0.4"/>
+  </svg>`,
+};
+
+/* ── PERIOD NATURE BACKGROUNDS ── */
+const PERIOD_NATURE = {
+  ancient: `<svg viewBox="0 0 300 500" xmlns="http://www.w3.org/2000/svg">
+    <line x1="40" y1="0" x2="40" y2="500" stroke="#4A6741" stroke-width="14" stroke-linecap="round"/>
+    <ellipse cx="40" cy="90"  rx="10" ry="4" fill="#3A5731"/>
+    <ellipse cx="40" cy="200" rx="10" ry="4" fill="#3A5731"/>
+    <ellipse cx="40" cy="310" rx="10" ry="4" fill="#3A5731"/>
+    <ellipse cx="40" cy="420" rx="10" ry="4" fill="#3A5731"/>
+    <path d="M40,90  Q75,68  100,78"  stroke="#4A6741" stroke-width="2.5" fill="none"/>
+    <path d="M40,90  Q8,70   -10,80"  stroke="#4A6741" stroke-width="2.5" fill="none"/>
+    <path d="M40,310 Q75,288 100,298" stroke="#4A6741" stroke-width="2.5" fill="none"/>
+    <line x1="130" y1="60"  x2="130" y2="500" stroke="#4A6741" stroke-width="11" stroke-linecap="round"/>
+    <ellipse cx="130" cy="160" rx="8" ry="3.5" fill="#3A5731"/>
+    <ellipse cx="130" cy="280" rx="8" ry="3.5" fill="#3A5731"/>
+    <ellipse cx="130" cy="400" rx="8" ry="3.5" fill="#3A5731"/>
+    <path d="M130,160 Q165,138 185,148" stroke="#4A6741" stroke-width="2" fill="none"/>
+    <path d="M130,400 Q100,378 80,388"  stroke="#4A6741" stroke-width="2" fill="none"/>
+    <line x1="240" y1="20"  x2="240" y2="500" stroke="#4A6741" stroke-width="12" stroke-linecap="round"/>
+    <ellipse cx="240" cy="120" rx="9" ry="3.5" fill="#3A5731"/>
+    <ellipse cx="240" cy="250" rx="9" ry="3.5" fill="#3A5731"/>
+    <ellipse cx="240" cy="380" rx="9" ry="3.5" fill="#3A5731"/>
+    <path d="M240,120 Q272,98  295,108" stroke="#4A6741" stroke-width="2" fill="none"/>
+    <path d="M240,250 Q210,228 188,238" stroke="#4A6741" stroke-width="2" fill="none"/>
+  </svg>`,
+
+  classical: `<svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
+    <path d="M150,400 Q145,300 150,240" stroke="#4A6741" stroke-width="5" fill="none"/>
+    <path d="M150,320 Q90,285 65,305"  stroke="#4A6741" stroke-width="4" fill="#4A674122"/>
+    <path d="M150,290 Q205,255 228,275" stroke="#4A6741" stroke-width="4" fill="#4A674122"/>
+    <circle cx="150" cy="228" r="22"  fill="#B8860B22" stroke="#B8860B" stroke-width="1.5"/>
+    <circle cx="150" cy="228" r="13"  fill="#B8860B11" stroke="#B8860B" stroke-width="1"/>
+    <path d="M150,206 Q138,176 150,160 Q162,176 150,206" fill="#E0D0B022" stroke="#C4A86088" stroke-width="1.2"/>
+    <path d="M172,214 Q196,182 215,192 Q206,215 172,214" fill="#E0D0B022" stroke="#C4A86088" stroke-width="1.2"/>
+    <path d="M128,214 Q104,182  85,192 Q94,215 128,214"  fill="#E0D0B022" stroke="#C4A86088" stroke-width="1.2"/>
+    <path d="M176,232 Q205,228 216,246 Q198,260 176,232" fill="#E0D0B022" stroke="#C4A86088" stroke-width="1.2"/>
+    <path d="M124,232 Q95,228  84,246 Q102,260 124,232"  fill="#E0D0B022" stroke="#C4A86088" stroke-width="1.2"/>
+    <path d="M155,210 Q162,190 150,180 Q138,190 145,210" fill="#E8D8B833" stroke="#C4A86066" stroke-width="1"/>
+    <path d="M166,223 Q180,208 192,216 Q184,228 166,223"  fill="#E8D8B833" stroke="#C4A86066" stroke-width="1"/>
+    <path d="M134,223 Q120,208 108,216 Q116,228 134,223"  fill="#E8D8B833" stroke="#C4A86066" stroke-width="1"/>
+  </svg>`,
+
+  modern: `<svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,400 L60,280 L110,340 L170,200 L230,300 L300,220 L300,400 Z" fill="#4A6741" opacity="0.5"/>
+    <path d="M0,400 L90,340 L160,370 L230,330 L300,360 L300,400 Z" fill="#3A5731" opacity="0.4"/>
+    <path d="M0,180 Q80,140 160,165 Q210,178 270,140 Q290,128 300,135" stroke="#3A2010" stroke-width="4" fill="none" opacity="0.5"/>
+    <path d="M160,165 Q165,110 172,80"  stroke="#3A2010" stroke-width="2.5" fill="none" opacity="0.4"/>
+    <path d="M270,140 Q278,100 285,75"  stroke="#3A2010" stroke-width="2"   fill="none" opacity="0.35"/>
+    <circle cx="172" cy="78"  r="9"  fill="#D4A4A4" opacity="0.65"/>
+    <circle cx="183" cy="70"  r="7"  fill="#C89898" opacity="0.55"/>
+    <circle cx="161" cy="70"  r="6"  fill="#D4A4A4" opacity="0.5"/>
+    <circle cx="188" cy="82"  r="6"  fill="#E0B8B8" opacity="0.45"/>
+    <circle cx="285" cy="73"  r="9"  fill="#D4A4A4" opacity="0.6"/>
+    <circle cx="295" cy="65"  r="7"  fill="#C89898" opacity="0.5"/>
+    <circle cx="275" cy="66"  r="6"  fill="#D4A4A4" opacity="0.45"/>
+  </svg>`,
+};
+
+/* ── BUILD TIMELINE ── */
+const timeline = document.getElementById('timeline');
+
+PERIODS.forEach(period => {
+  const section = document.createElement('section');
+  section.className = 'period-section';
+
+  const natureKey = period.id;
+  section.innerHTML = `
+    <div class="period-nature">${PERIOD_NATURE[natureKey]}</div>
+    <div class="period-header">
+      <div class="period-rule"></div>
+      <div class="period-label">
+        <span class="period-era">${period.label}</span>
+        <span class="period-dates">${period.dates}</span>
+      </div>
+    </div>
+    <div class="instruments-grid">
+      ${period.instruments.map(id => {
+        const inst = INSTRUMENTS[id];
+        const badgeClass = `badge-${inst.regionType}`;
+        return `
+          <a href="instrument.html?id=${id}" class="instrument-card">
+            <span class="c tl"></span><span class="c tr"></span>
+            <span class="c bl"></span><span class="c br"></span>
+            <div class="card-icon-area">${ICONS[id] || ''}</div>
+            <span class="region-badge ${badgeClass}">${inst.regionLabel}</span>
+            <h3 class="card-name">${inst.name}</h3>
+            <p class="card-native">${inst.native}</p>
+            <p class="card-desc">${inst.shortDesc}</p>
+            <div class="card-interact">${inst.typeLabel}</div>
+          </a>`;
+      }).join('')}
+    </div>
+  `;
+
+  timeline.appendChild(section);
+});
+</script>
 </body>
 </html>
