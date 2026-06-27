@@ -329,13 +329,14 @@ function initWind(inst, container) {
   function getPressedIdx() {
     const active = pressed.reduce((a, v, i) => { if (v) a.push(i); return a; }, []);
     if (!active.length) return 0;
-    // Average position of pressed holes, scaled to the note range.
-    // This makes WHICH holes you press matter: holes 1+2 (low avg) vs 4+5 (high avg)
-    // map to different notes even though both are 2 holes.
     const avg = active.reduce((a, b) => a + b, 0) / active.length;
-    return Math.min(
-      Math.round(avg * (notes.length - 1) / (pressed.length - 1)),
-      notes.length - 1
+    // Map hole average [0..holes-1] → note index [1..notes-1].
+    // With notes.length = holes.length + 1, each individual hole i maps to a unique
+    // note (i+1), so no two single-hole presses ever share a pitch.
+    // Combos land between their constituent holes' notes.
+    return 1 + Math.min(
+      Math.round(avg * (notes.length - 2) / Math.max(1, pressed.length - 1)),
+      notes.length - 2
     );
   }
   function getCurrentFreq() { return notes[getPressedIdx()]; }
