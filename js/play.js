@@ -310,14 +310,14 @@ function initWind(inst, container) {
   let rafId       = null;
   let stopTimer   = null;
 
-  function getComboKey()   { return pressed.join(''); }
   function getCurrentFreq() {
-    const idx = combos[getComboKey()] ?? 0;
-    return notes[Math.min(idx, notes.length - 1)];
+    // Number of holes pressed determines the note — intuitive and always distinct
+    const idx = Math.min(pressed.filter(p => p).length, notes.length - 1);
+    return notes[idx];
   }
   function getCurrentName() {
-    const idx = combos[getComboKey()] ?? 0;
-    return names[Math.min(idx, names.length - 1)] || '—';
+    const idx = Math.min(pressed.filter(p => p).length, names.length - 1);
+    return names[idx] || '—';
   }
 
   function setBlowing(on) {
@@ -348,10 +348,8 @@ function initWind(inst, container) {
     function pressHole() {
       pressed[i] = 1;
       btn.classList.add('pressed');
-      if (blowing) updateWindFreq(getCurrentFreq());
       noteDisplay.textContent = getCurrentName();
-      // Play a short preview pluck so pressing a hole always gives audio feedback
-      playPluck(getCurrentFreq());
+      if (blowing) updateWindFreq(getCurrentFreq());
     }
     function releaseHole() {
       pressed[i] = 0;
