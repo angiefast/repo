@@ -26,17 +26,16 @@ body {
   overflow-x: hidden;
 }
 
-/* ── SUBTLE GRID TEXTURE ── */
+/* ── SHOJI SCREEN BACKGROUND ── */
 body::before {
   content: '';
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  background-image:
-    linear-gradient(rgba(196,154,60,0.07) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(196,154,60,0.07) 1px, transparent 1px);
-  background-size: 32px 32px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='120'%3E%3C!-- tile border lines (align with adjacent tiles to form continuous grid) --%3E%3Cline x1='0' y1='0' x2='180' y2='0' stroke='%23C49A3C' stroke-width='1' opacity='0.18'/%3E%3Cline x1='0' y1='0' x2='0' y2='120' stroke='%23C49A3C' stroke-width='1' opacity='0.18'/%3E%3C!-- primary interior — full-span, unequal divisions --%3E%3Cline x1='0' y1='50' x2='180' y2='50' stroke='%23C49A3C' stroke-width='0.9' opacity='0.15'/%3E%3Cline x1='70' y1='0' x2='70' y2='120' stroke='%23C49A3C' stroke-width='0.9' opacity='0.15'/%3E%3Cline x1='130' y1='0' x2='130' y2='120' stroke='%23C49A3C' stroke-width='0.9' opacity='0.15'/%3E%3C!-- secondary — partial lines (T-intersections, shoji character) --%3E%3Cline x1='0' y1='25' x2='70' y2='25' stroke='%23C49A3C' stroke-width='0.5' opacity='0.1'/%3E%3Cline x1='105' y1='0' x2='105' y2='50' stroke='%23C49A3C' stroke-width='0.5' opacity='0.1'/%3E%3Cline x1='130' y1='32' x2='180' y2='32' stroke='%23C49A3C' stroke-width='0.5' opacity='0.1'/%3E%3Cline x1='40' y1='50' x2='40' y2='120' stroke='%23C49A3C' stroke-width='0.5' opacity='0.1'/%3E%3Cline x1='70' y1='88' x2='130' y2='88' stroke='%23C49A3C' stroke-width='0.5' opacity='0.1'/%3E%3Cline x1='152' y1='50' x2='152' y2='120' stroke='%23C49A3C' stroke-width='0.5' opacity='0.1'/%3E%3C/svg%3E");
+  background-size: 180px 120px;
+  background-repeat: repeat;
 }
 
 .page-content { position: relative; z-index: 1; }
