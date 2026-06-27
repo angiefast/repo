@@ -156,10 +156,11 @@ function playJangguLow() {
 let windOsc = null, windNoise = null, windGain = null;
 
 function startWind(freq) {
-  stopWind();
+  if (windOsc) { updateWindFreq(freq); return; } // already running — just update pitch
   const ctx = getAudio();
   windGain = ctx.createGain();
-  windGain.gain.value = 0.38;
+  windGain.gain.setValueAtTime(0, ctx.currentTime);
+  windGain.gain.linearRampToValueAtTime(0.38, ctx.currentTime + 0.06); // fade in to avoid pop
   windGain.connect(ctx.destination);
 
   windOsc = ctx.createOscillator();
@@ -190,13 +191,22 @@ function startWind(freq) {
 
 function updateWindFreq(freq) {
   if (!windOsc) return;
-  windOsc.frequency.setTargetAtTime(freq, audioCtx.currentTime, 0.06);
+  const ctx = getAudio();
+  windOsc.frequency.setTargetAtTime(freq, ctx.currentTime, 0.05);
 }
 
 function stopWind() {
-  try { if (windOsc)   { windOsc.stop();   windOsc   = null; } } catch(e){}
-  try { if (windNoise) { windNoise.stop();  windNoise = null; } } catch(e){}
-  windGain = null;
+  if (!windGain) return;
+  const ctx = getAudio();
+  // Fade out smoothly before stopping to avoid click/pop
+  windGain.gain.setValueAtTime(windGain.gain.value, ctx.currentTime);
+  windGain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.07);
+  const osc = windOsc, noise = windNoise;
+  windOsc = null; windNoise = null; windGain = null;
+  setTimeout(() => {
+    try { osc.stop();   } catch(e){}
+    try { noise.stop(); } catch(e){}
+  }, 80);
 }
 
 /* ════════════════════════════════════════
@@ -278,7 +288,7 @@ function initWind(inst, container) {
   container.innerHTML = `
     <div class="wind-wrap">
       <div class="breath-track"><div class="breath-fill" id="breath-fill"></div></div>
-      <div class="blow-label" id="blow-label">Starting microphone…</div>
+      <div class="blow-label" id="blow-label">Allow mic access when prompted…</div>
       <div class="note-display" id="note-display">—</div>
       <div class="holes-grid" id="holes-grid">
         ${holes.map((label, i) => `
@@ -293,12 +303,12 @@ function initWind(inst, container) {
   const holeBtns    = container.querySelectorAll('.hole-btn');
   const holdBtn     = container.querySelector('#hold-blow');
 
-  let pressed   = new Array(holes.length).fill(0);
-  let blowing   = false;
-  let micStream = null;
-  let analyser  = null;
-  let rafId     = null;
-  let micActive = false;
+  let pressed     = new Array(holes.length).fill(0);
+  let blowing     = false;
+  let micStream   = null;
+  let analyser    = null;
+  let rafId       = null;
+  let stopTimer   = null;
 
   function getComboKey()   { return pressed.join(''); }
   function getCurrentFreq() {
@@ -311,17 +321,43 @@ function initWind(inst, container) {
   }
 
   function setBlowing(on) {
-    if (on === blowing) return;
-    blowing = on;
-    if (on) { startWind(getCurrentFreq()); noteDisplay.textContent = getCurrentName(); }
-    else    { stopWind();                  noteDisplay.textContent = '—'; }
+    if (on) {
+      // Cancel any pending stop
+      if (stopTimer) { clearTimeout(stopTimer); stopTimer = null; }
+      if (!blowing) {
+        blowing = true;
+        startWind(getCurrentFreq());
+        noteDisplay.textContent = getCurrentName();
+      }
+    } else {
+      // Debounce the stop — don't cut out on brief mic silence
+      if (!stopTimer) {
+        stopTimer = setTimeout(() => {
+          blowing = false;
+          stopWind();
+          noteDisplay.textContent = '—';
+          stopTimer = null;
+        }, 200);
+      }
+    }
   }
 
-  /* ── HOLE BUTTONS ── */
+  /* ── HOLE BUTTONS — also trigger note preview on their own ── */
   holeBtns.forEach(btn => {
     const i = parseInt(btn.dataset.hole);
-    function pressHole()   { pressed[i] = 1; btn.classList.add('pressed');    if (blowing) updateWindFreq(getCurrentFreq()); noteDisplay.textContent = getCurrentName(); }
-    function releaseHole() { pressed[i] = 0; btn.classList.remove('pressed'); if (blowing) updateWindFreq(getCurrentFreq()); noteDisplay.textContent = getCurrentName(); }
+    function pressHole() {
+      pressed[i] = 1;
+      btn.classList.add('pressed');
+      if (blowing) updateWindFreq(getCurrentFreq());
+      noteDisplay.textContent = getCurrentName();
+      // Play a short preview pluck so pressing a hole always gives audio feedback
+      playPluck(getCurrentFreq());
+    }
+    function releaseHole() {
+      pressed[i] = 0;
+      btn.classList.remove('pressed');
+      if (blowing) updateWindFreq(getCurrentFreq());
+    }
     btn.addEventListener('touchstart', e => { e.preventDefault(); pressHole();   }, { passive: false });
     btn.addEventListener('touchend',   e => { e.preventDefault(); releaseHole(); }, { passive: false });
     btn.addEventListener('mousedown',  pressHole);
@@ -339,7 +375,7 @@ function initWind(inst, container) {
   /* ── MIC SETUP ──
      CRITICAL: call getAudio() BEFORE the await so the AudioContext is created
      while the user-gesture is still active (required by Safari / iOS). */
-  const THRESHOLD = 7;
+  const THRESHOLD = 3;
 
   async function startMic() {
     const ctx = getAudio(); // ← must happen synchronously inside the gesture chain
@@ -350,7 +386,7 @@ function initWind(inst, container) {
       analyser.fftSize = 256;
       src.connect(analyser);
       micActive = true;
-      blowLabel.textContent = 'Blow into your mic  ·  or hold the button below';
+      blowLabel.textContent = 'Make any sound into your mic  ·  or hold the button below';
       holdBtn.textContent   = 'Hold to Blow (fallback)';
       pollMic();
     } catch (err) {
