@@ -537,7 +537,7 @@ body::before {
   position: absolute;
   left: 0; right: 48px;
   height: 2px;
-  background: linear-gradient(90deg, transparent 0%, var(--gold-pale) 12%, var(--gold-pale) 88%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, var(--sc, var(--gold-pale)) 12%, var(--sc, var(--gold-pale)) 88%, transparent 100%);
   opacity: 0.55;
   transition: opacity 0.1s;
 }

@@ -121,11 +121,12 @@ function stopWind() {
 function initString(inst, container) {
   const notes = inst.notes;
   const names = inst.noteNames || notes.map(() => '');
+  const color = inst.stringColor || 'var(--gold-pale)';
 
   container.innerHTML = `
     <div class="string-wrap" id="string-wrap">
       ${notes.map((f, i) => `
-        <div class="string-row" data-idx="${i}" data-freq="${f}">
+        <div class="string-row" data-idx="${i}" data-freq="${f}" style="--sc:${color}">
           <div class="string-line"></div>
           <span class="string-note-tag">${names[i] || ''}</span>
         </div>`).join('')}
