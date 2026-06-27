@@ -270,120 +270,112 @@ function initString(inst, container) {
    WIND INTERFACE
 ════════════════════════════════════════ */
 function initWind(inst, container) {
-  const holes = inst.holes || [];
+  const holes  = inst.holes  || [];
   const combos = inst.combos || {};
-  const notes = inst.notes;
-  const names = inst.noteNames || [];
+  const notes  = inst.notes;
+  const names  = inst.noteNames || [];
 
   container.innerHTML = `
     <div class="wind-wrap">
       <div class="breath-track"><div class="breath-fill" id="breath-fill"></div></div>
-      <div class="blow-label" id="blow-label">Blow into your microphone ↑</div>
+      <div class="blow-label" id="blow-label">Starting microphone…</div>
       <div class="note-display" id="note-display">—</div>
       <div class="holes-grid" id="holes-grid">
         ${holes.map((label, i) => `
-          <button class="hole-btn" data-hole="${i}" ontouchstart="return false;">${label}</button>`).join('')}
+          <button class="hole-btn" data-hole="${i}">${label}</button>`).join('')}
       </div>
+      <button class="hold-blow-btn" id="hold-blow">Hold to Blow</button>
     </div>`;
 
   const breathFill  = container.querySelector('#breath-fill');
   const noteDisplay = container.querySelector('#note-display');
+  const blowLabel   = container.querySelector('#blow-label');
   const holeBtns    = container.querySelectorAll('.hole-btn');
-  let pressed = new Array(holes.length).fill(0);
-  let blowing = false;
-  let micStream = null, analyser = null;
+  const holdBtn     = container.querySelector('#hold-blow');
 
-  function getComboKey() { return pressed.join(''); }
+  let pressed   = new Array(holes.length).fill(0);
+  let blowing   = false;
+  let micStream = null;
+  let analyser  = null;
+  let rafId     = null;
+  let micActive = false;
+
+  function getComboKey()   { return pressed.join(''); }
   function getCurrentFreq() {
-    const key = getComboKey();
-    const idx = combos[key] ?? 0;
-    return notes[idx];
+    const idx = combos[getComboKey()] ?? 0;
+    return notes[Math.min(idx, notes.length - 1)];
   }
   function getCurrentName() {
-    const key = getComboKey();
-    const idx = combos[key] ?? 0;
-    return names[idx] || '—';
+    const idx = combos[getComboKey()] ?? 0;
+    return names[Math.min(idx, names.length - 1)] || '—';
   }
 
-  // Hole press handling (touch + mouse)
+  function setBlowing(on) {
+    if (on === blowing) return;
+    blowing = on;
+    if (on) { startWind(getCurrentFreq()); noteDisplay.textContent = getCurrentName(); }
+    else    { stopWind();                  noteDisplay.textContent = '—'; }
+  }
+
+  /* ── HOLE BUTTONS ── */
   holeBtns.forEach(btn => {
     const i = parseInt(btn.dataset.hole);
-    btn.addEventListener('touchstart', e => {
-      e.preventDefault();
-      pressed[i] = 1;
-      btn.classList.add('pressed');
-      if (blowing) { startWind(getCurrentFreq()); noteDisplay.textContent = getCurrentName(); }
-    }, { passive: false });
-    btn.addEventListener('touchend', e => {
-      e.preventDefault();
-      pressed[i] = 0;
-      btn.classList.remove('pressed');
-      if (blowing) { updateWindFreq(getCurrentFreq()); noteDisplay.textContent = getCurrentName(); }
-    }, { passive: false });
-    btn.addEventListener('mousedown', () => {
-      pressed[i] = 1;
-      btn.classList.add('pressed');
-      if (blowing) { updateWindFreq(getCurrentFreq()); noteDisplay.textContent = getCurrentName(); }
-    });
-    btn.addEventListener('mouseup', () => {
-      pressed[i] = 0;
-      btn.classList.remove('pressed');
-      if (blowing) { updateWindFreq(getCurrentFreq()); noteDisplay.textContent = getCurrentName(); }
-    });
+    function pressHole()   { pressed[i] = 1; btn.classList.add('pressed');    if (blowing) updateWindFreq(getCurrentFreq()); noteDisplay.textContent = getCurrentName(); }
+    function releaseHole() { pressed[i] = 0; btn.classList.remove('pressed'); if (blowing) updateWindFreq(getCurrentFreq()); noteDisplay.textContent = getCurrentName(); }
+    btn.addEventListener('touchstart', e => { e.preventDefault(); pressHole();   }, { passive: false });
+    btn.addEventListener('touchend',   e => { e.preventDefault(); releaseHole(); }, { passive: false });
+    btn.addEventListener('mousedown',  pressHole);
+    btn.addEventListener('mouseup',    releaseHole);
+    btn.addEventListener('mouseleave', releaseHole);
   });
 
-  // Mic setup
-  const BLOW_THRESHOLD = 8;
-  let rafId;
+  /* ── HOLD-TO-BLOW FALLBACK ── */
+  holdBtn.addEventListener('touchstart', e => { e.preventDefault(); setBlowing(true);  }, { passive: false });
+  holdBtn.addEventListener('touchend',   e => { e.preventDefault(); setBlowing(false); }, { passive: false });
+  holdBtn.addEventListener('mousedown',  ()  => setBlowing(true));
+  holdBtn.addEventListener('mouseup',    ()  => setBlowing(false));
+  holdBtn.addEventListener('mouseleave', ()  => setBlowing(false));
+
+  /* ── MIC SETUP ──
+     CRITICAL: call getAudio() BEFORE the await so the AudioContext is created
+     while the user-gesture is still active (required by Safari / iOS). */
+  const THRESHOLD = 7;
 
   async function startMic() {
+    const ctx = getAudio(); // ← must happen synchronously inside the gesture chain
     try {
       micStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
-      const ctx = getAudio();
       const src = ctx.createMediaStreamSource(micStream);
-      analyser = ctx.createAnalyser();
+      analyser  = ctx.createAnalyser();
       analyser.fftSize = 256;
       src.connect(analyser);
-      container.querySelector('#blow-label').textContent = 'Blow steadily into your microphone ↑';
+      micActive = true;
+      blowLabel.textContent = 'Blow into your mic  ·  or hold the button below';
+      holdBtn.textContent   = 'Hold to Blow (fallback)';
       pollMic();
-    } catch(err) {
-      container.querySelector('#blow-label').textContent = 'Mic access denied — tap holes to test notes';
+    } catch (err) {
+      blowLabel.textContent = 'Mic unavailable — hold the button below to play';
     }
   }
 
   function pollMic() {
     const buf = new Uint8Array(analyser.frequencyBinCount);
-    function check() {
+    function tick() {
       analyser.getByteTimeDomainData(buf);
       let sum = 0;
-      for (let v of buf) sum += Math.abs(v - 128);
+      for (const v of buf) sum += Math.abs(v - 128);
       const vol = sum / buf.length;
-      const pct = Math.min(100, (vol / BLOW_THRESHOLD) * 100);
-      breathFill.style.width = pct + '%';
-
-      const nowBlowing = vol > BLOW_THRESHOLD;
-      if (nowBlowing && !blowing) {
-        blowing = true;
-        startWind(getCurrentFreq());
-        noteDisplay.textContent = getCurrentName();
-      } else if (!nowBlowing && blowing) {
-        blowing = false;
-        stopWind();
-        noteDisplay.textContent = '—';
-      } else if (blowing) {
-        updateWindFreq(getCurrentFreq());
-        noteDisplay.textContent = getCurrentName();
-      }
-      rafId = requestAnimationFrame(check);
+      breathFill.style.width = Math.min(100, (vol / THRESHOLD) * 100) + '%';
+      setBlowing(vol > THRESHOLD);
+      rafId = requestAnimationFrame(tick);
     }
-    check();
+    tick();
   }
 
   startMic();
 
-  // Cleanup when leaving
   window._windCleanup = () => {
-    stopWind();
+    setBlowing(false);
     if (rafId) cancelAnimationFrame(rafId);
     if (micStream) micStream.getTracks().forEach(t => t.stop());
   };
